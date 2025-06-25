@@ -1,0 +1,370 @@
+@model UniMart_App.Models.ApplicationUser
+@{
+    ViewData["Title"] = "My Profile";
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/front-end/Profile.css">
+    <style>
+        .profile-card {
+            transition: box-shadow 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+        .profile-card:hover {
+            box-shadow: 0 4px 24px rgba(0,0,0,0.12), 0 1.5px 6px rgba(0,0,0,0.08);
+            transform: translateY(-2px) scale(1.01);
+            z-index: 2;
+        }
+        .profile-section-link {
+            text-decoration: none;
+            color: inherit;
+        }
+        .profile-section-link:focus {
+            outline: 2px solid #0d6efd;
+        }
+        .profile-card .section-title {
+            font-weight: 600;
+        }
+        .profile-card {
+            border: 1px solid #e3e3e3;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: #fff;
+        }
+        .favorite-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e3e3e3;
+        }
+        .profile-card[tabindex] {
+            outline: none;
+        }
+        .profile-card:active {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            transform: scale(0.99);
+        }
+    </style>
+}
+
+<div class="container mt-4">
+    <h4 class="mb-4" data-translate="my_profile">My Profile</h4>
+    <div class="profile-card">
+        <div class="d-flex align-items-center mb-4">
+            <img src="@(Model.ProfileImageUrl ?? "https://randomuser.me/api/portraits/women/44.jpg")" class="avatar me-3" alt="avatar">
+            <div>
+                <h5 class="mb-0">@Model.FirstName @Model.LastName <a asp-controller="Account" asp-action="Settings" class="text-decoration-none"><i class="bi bi-pencil ms-1"></i></a></h5>
+                <small class="text-muted">
+                    <i class="bi bi-mortarboard"></i> 
+                    @if (Model.Faculty != null)
+                    {
+                        @Model.Faculty.Name
+                    }
+                    else
+                    {
+                        <span data-translate="not_specified">Not specified</span>
+                    }
+                </small>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <!-- Recent Activity -->
+            <div class="col-md-6">
+                <a asp-controller="Orders" asp-action="MyOrders" class="profile-section-link">
+                <div class="profile-card" tabindex="0">
+                    <div class="section-title mb-2">Recent Activity</div>
+                    @if (ViewBag.RecentOrders != null && ViewBag.RecentOrders.Count > 0)
+                    {
+                        foreach (var order in ViewBag.RecentOrders)
+                        {
+                            <p>
+                                <i class="bi bi-check-circle-fill text-success"></i> 
+                                Order #@order.OrderNumber @order.Status 
+                                <br>
+                                <small class="text-muted">@order.OrderDate</small>
+                            </p>
+                        }
+                    }
+                    else
+                    {
+                        <p><i class="bi bi-check-circle-fill text-success"></i> Order #12345 Delivered <br><small class="text-muted" data-translate="yesterday_at_230_pm">Yesterday at 2:30 PM</small></p>
+                        <p><i class="bi bi-truck text-primary"></i> Order #12346 Shipped <br><small class="text-muted" data-translate="jan_15_2025">Jan 15, 2025</small></p>
+                        <p><i class="bi bi-bag-fill text-warning"></i> Order #12347 Purchased <br><small class="text-muted" data-translate="jan_14_2025">Jan 14, 2025</small></p>
+                    }
+                </div>
+                </a>
+            </div>
+
+            <!-- Delivery Address -->
+            <div class="col-md-6">
+                <a href="#" class="profile-section-link" data-bs-toggle="modal" data-bs-target="#updateAddressModal">
+                <div class="profile-card" tabindex="0">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="section-title">Delivery Address</div>
+                        <span class="small text-primary" data-translate="update_location">Update Location</span>
+                    </div>
+                    <div class="map-container">
+                        <iframe id="user-map" width="100%" height="200"
+                            src="" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                    <p id="user-location-text" class="mb-0 mt-2 text-primary"></p>
+                    <p class="mb-0 mt-2">
+                        @if (!string.IsNullOrEmpty(Model.Address))
+                        {
+                            @Model.Address
+                        }
+                        else
+                        {
+                            <span>Assiut University<br>123 University Drive, Building B</span>
+                        }
+                    </p>
+                    <p class="text-danger" id="location-permission-message" style="display:none;">
+                        For full functionality, please allow location access in your browser settings. Default location is set to Assiut.
+                    </p>
+                </div>
+                </a>
+            </div>
+
+            <!-- Favorite -->
+            <div class="col-md-6">
+                <a asp-controller="Favorites" asp-action="Index" class="profile-section-link">
+                <div class="profile-card" tabindex="0">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="section-title">Favorites</div>
+                        <span class="small text-primary" data-translate="view_all">View All</span>
+                    </div>
+                    <div class="d-flex gap-3">
+                        @if (ViewBag.FavoriteProducts != null && ViewBag.FavoriteProducts.Count > 0)
+                        {
+                            var favoriteProducts = (List<UniMart_App.Models.Product>)ViewBag.FavoriteProducts;
+                            for (int i = 0; i < favoriteProducts.Count && i < 2; i++)
+                            {
+                                var product = favoriteProducts[i];
+                                <img src="@(product.ProductImages.FirstOrDefault()?.ImageUrl ?? "/img/default-profile.png")" class="img-fluid rounded favorite-img" alt="@product.Name" />
+                            }
+                        }
+                        else
+                        {
+                            <img src="/img/default-profile.png" class="img-fluid rounded favorite-img" alt="book" />
+                            <img src="/img/default-profile.png" class="img-fluid rounded favorite-img" alt="study" />
+                        }
+                    </div>
+                </div>
+                </a>
+            </div>
+
+            <!-- Security -->
+            <div class="col-md-6">
+                <a href="#" class="profile-section-link" data-bs-toggle="modal" data-bs-target="#loginHistoryModal">
+                <div class="profile-card" tabindex="0">
+                    <div class="section-title mb-2">Security</div>
+                    <p class="mb-2">
+                        <strong>Last Login:</strong> <span class="text-success">
+                            @if (Model.LastSeen != null)
+                            {
+                                @Model.LastSeen.Value.ToLocalTime().ToString("MMM dd, yyyy 'at' hh:mm tt")
+                            }
+                            else
+                            {
+                                <span data-translate="never">Never</span>
+                            }
+                        </span>
+                        <span class="small text-primary float-end" data-translate="view_history">View History</span>
+                    </p>
+                    <form asp-controller="Account" asp-action="LogoutAllSessions" method="post">
+                        <button type="submit" class="btn btn-danger w-100" data-translate="log_out_all_sessions">Log Out All Sessions</button>
+                    </form>
+                </div>
+                </a>
+            </div>
+
+            <!-- Academic Information -->
+            <div class="col-md-12">
+                <a href="#" class="profile-section-link" data-bs-toggle="modal" data-bs-target="#updateAcademicModal">
+                <div class="profile-card" tabindex="0">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="section-title">Academic Information</div>
+                        <span class="small text-primary" data-translate="update">Update</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Faculty:</strong> 
+                                @if (Model.Faculty != null)
+                                {
+                                    @Model.Faculty.Name
+                                }
+                                else
+                                {
+                                    <span data-translate="not_specified">Not specified</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Academic Year:</strong> 
+                                @if (Model.AcademicYear != null)
+                                {
+                                    @Model.AcademicYear.Year
+                                }
+                                else
+                                {
+                                    <span data-translate="not_specified">Not specified</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Address Modal -->
+<div class="modal fade" id="updateAddressModal" tabindex="-1" aria-labelledby="updateAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateAddressModalLabel" data-translate="update_delivery_address">Update Delivery Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Account" asp-action="UpdateAddress" method="post">
+                    <div class="mb-3">
+                        <label for="address" class="form-label" data-translate="address">Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="3" required>@Model.Address</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="city" class="form-label" data-translate="city">City</label>
+                        <input type="text" class="form-control" id="city" name="city" value="@Model.City" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postalCode" class="form-label" data-translate="postal_code">Postal Code</label>
+                        <input type="text" class="form-control" id="postalCode" name="postalCode" value="@Model.PostalCode" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-translate="save_changes">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Academic Information Modal -->
+<div class="modal fade" id="updateAcademicModal" tabindex="-1" aria-labelledby="updateAcademicModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateAcademicModalLabel" data-translate="update_academic_information">Update Academic Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Account" asp-action="UpdateAcademic" method="post">
+                    <div class="mb-3">
+                        <label for="facultyId" class="form-label" data-translate="faculty">Faculty</label>
+                        <select class="form-select" id="facultyId" name="facultyId" required>
+                            <option value="">Select Faculty</option>
+                            @foreach (var faculty in ViewBag.Faculties ?? new List<UniMart_App.Models.Faculty>())
+                            {
+                                <option value="@faculty.Id" selected="@(Model.FacultyId == faculty.Id)">@faculty.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="academicYearId" class="form-label" data-translate="academic_year">Academic Year</label>
+                        <select class="form-select" id="academicYearId" name="academicYearId" required>
+                            <option value="">Select Academic Year</option>
+                            @foreach (var year in ViewBag.AcademicYears ?? new List<UniMart_App.Models.AcademicYear>())
+                            {
+                                <option value="@year.Id" selected="@(Model.AcademicYearId == year.Id)">@year.Year</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-translate="save_changes">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Login History Modal -->
+<div class="modal fade" id="loginHistoryModal" tabindex="-1" aria-labelledby="loginHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginHistoryModalLabel" data-translate="login_history">Login History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th data-translate="date_time">Date & Time</th>
+                            <th data-translate="device">Device</th>
+                            <th data-translate="location">Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.LoginHistory != null)
+                        {
+                            foreach (var entry in (List<UniMart_App.Models.LoginHistory>)ViewBag.LoginHistory)
+                            {
+                                <tr>
+                                    <td>@entry.LoginTime.ToLocalTime().ToString("MMM dd, yyyy 'at' hh:mm tt")</td>
+                                    <td>@entry.Device</td>
+                                    <td>@entry.Location</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="3" data-translate="no_login_history_found">No login history found.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="user-lat" name="Latitude" />
+<input type="hidden" id="user-lng" name="Longitude" />
+<iframe id="user-map" width="100%" height="200" src="" allowfullscreen="" loading="lazy"></iframe>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    document.getElementById('user-lat').value = lat;
+                    document.getElementById('user-lng').value = lng;
+                    document.getElementById('user-map').src =
+                        `https://www.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+                    // Fetch and display the address text using a geocoding API
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById('user-location-text').textContent = data.display_name || `Lat: ${lat}, Lng: ${lng}`;
+                        })
+                        .catch(() => {
+                            document.getElementById('user-location-text').textContent = `Lat: ${lat}, Lng: ${lng}`;
+                        });
+                }, function (error) {
+                    document.getElementById('user-map').src =
+                        "https://www.google.com/maps?q=27.18096,31.18368&z=15&output=embed";
+                    document.getElementById('user-location-text').textContent = "Assiut, Egypt (default)";
+                    document.getElementById('location-permission-message').style.display = 'block';
+                });
+            } else {
+                document.getElementById('user-map').src =
+                    "https://www.google.com/maps?q=27.18096,31.18368&z=15&output=embed";
+                document.getElementById('user-location-text').textContent = "Assiut, Egypt (default)";
+                document.getElementById('location-permission-message').style.display = 'block';
+            }
+        });
+    </script>
+}

@@ -1,0 +1,155 @@
+@model IEnumerable<UniMart_App.Models.AcademicYear>
+@{
+    ViewData["Title"] = "Academic Year Management";
+    Layout = "_DashboardLayout";
+}
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0" data-translate="academic_year_management">Academic Year Management</h2>
+            <p class="text-muted" data-translate="manage_academic_years_for_student_classification">Manage academic years for student classification</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add New Academic Year
+        </a>
+    </div>
+
+    <!-- Success/Error Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Academic Years Table -->
+    @if (Model.Any())
+    {
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th data-translate="academic_year">Academic Year</th>
+                                <th data-translate="users_count">Users Count</th>
+                                <th data-translate="actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var academicYear in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <h6 class="mb-0">@academicYear.Year</h6>
+                                        <small class="text-muted">ID: @academicYear.Id</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">@academicYear.Users.Count Users</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Edit" asp-route-id="@academicYear.Id" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-pencil"></i> Edit
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                    data-bs-toggle="modal" data-bs-target="#deleteModal" 
+                                                    data-year-id="@academicYear.Id" data-year-name="@academicYear.Year"
+                                                    data-has-users="@(academicYear.Users.Any().ToString().ToLower())">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-calendar text-muted" style="font-size: 4rem;"></i>
+            <h4 class="mt-3 text-muted" data-translate="no_academic_years_found">No Academic Years Found</h4>
+            <p class="text-muted" data-translate="start_by_adding_academic_years_to_classify_students">Start by adding academic years to classify students.</p>
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Add Your First Academic Year
+            </a>
+        </div>
+    }
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel" data-translate="confirm_delete">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="deleteWarning" class="alert alert-warning" style="display: none;">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <strong>Warning:</strong> This academic year has associated users and cannot be deleted.
+                </div>
+                <p>Are you sure you want to delete the academic year "<span id="yearName"></span>"?</p>
+                <p class="text-muted small" data-translate="this_action_cannot_be_undone">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-translate="cancel">Cancel</button>
+                <form asp-action="Delete" method="post" id="deleteForm">
+                    <input type="hidden" name="id" id="yearId" />
+                    <button type="submit" class="btn btn-danger" id="deleteButton" data-translate="delete_academic_year">Delete Academic Year</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteModal = document.getElementById('deleteModal');
+            if (deleteModal) {
+                deleteModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const yearId = button.getAttribute('data-year-id');
+                    const yearName = button.getAttribute('data-year-name');
+                    const hasUsers = button.getAttribute('data-has-users') === 'true';
+                    
+                    const yearIdInput = document.getElementById('yearId');
+                    const yearNameSpan = document.getElementById('yearName');
+                    const deleteWarning = document.getElementById('deleteWarning');
+                    const deleteButton = document.getElementById('deleteButton');
+                    
+                    yearIdInput.value = yearId;
+                    yearNameSpan.textContent = yearName;
+                    
+                    if (hasUsers) {
+                        deleteWarning.style.display = 'block';
+                        deleteButton.disabled = true;
+                        deleteButton.textContent = 'Cannot Delete';
+                    } else {
+                        deleteWarning.style.display = 'none';
+                        deleteButton.disabled = false;
+                        deleteButton.textContent = 'Delete Academic Year';
+                    }
+                });
+            }
+        });
+    </script>
+}
+

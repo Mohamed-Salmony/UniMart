@@ -1,0 +1,49 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Image Test";
+}
+
+<!-- No additional styles needed since Font Awesome is already included in _Layout.cshtml -->
+
+<h1 data-translate="image_test_page">Image Test Page</h1>
+    
+<div class="image-container">
+    <h2 data-translate="logo_image">Logo Image</h2>
+    <div class="path">~/img/product-list/a2rjWFyUR5e97d6vt4t-xQ@1580850656 1.png</div>
+    <img src="/img/product-list/a2rjWFyUR5e97d6vt4t-xQ@1580850656 1.png" alt="Logo">
+</div>
+
+<div class="image-container">
+    <h2 data-translate="home_page_hero_image">Home Page Hero Image</h2>
+    <div class="path">~/img/home-page/img.png</div>
+    <img src="/img/home-page/img.png" alt="Hero Image">
+</div>
+
+<div class="image-container">
+    <h2 data-translate="product_image_1">Product Image 1</h2>
+    <div class="path">~/img/home-page/img-1.png</div>
+    <img src="/img/home-page/img-1.png" alt="Product 1">
+</div>
+
+<div class="image-container">
+    <h2 data-translate="footer_logo">Footer Logo</h2>
+    <div class="path">~/img/product-details/logo.png</div>
+    <img src="/img/product-details/logo.png" alt="Footer Logo">
+</div>
+
+<div class="image-container">
+    <h2 data-translate="font_awesome_icon_test">Font Awesome Icon Test</h2>
+    <div>
+        <i class="bi bi-star-fill" style="font-size: 24px; color: gold;"></i>
+        <i class="bi bi-cart" style="font-size: 24px; color: blue;"></i>
+        <i class="bi bi-person" style="font-size: 24px; color: green;"></i>
+    </div>
+</div>
+
+<style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .image-container { margin-bottom: 30px; border: 1px solid #ddd; padding: 10px; }
+    h2 { margin-top: 0; }
+    img { max-width: 300px; height: auto; display: block; margin-bottom: 10px; }
+    .path { font-family: monospace; background-color: #f5f5f5; padding: 5px; }
+</style>

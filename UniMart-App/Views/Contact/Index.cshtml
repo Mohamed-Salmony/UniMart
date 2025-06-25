@@ -1,0 +1,268 @@
+@{
+    ViewData["Title"] = "Contact & Support";
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/front-end/Contact.css" />
+}
+
+<!-- Search Popup -->
+<div id="searchPopup" class="search-popup d-none">
+    <div class="search-popup-content">
+        <button class="close-btn" onclick="toggleSearchPopup()" data-translate="">×</button>
+        <form class="d-flex" asp-controller="Products" asp-action="Search" method="get">
+            <input class="form-control me-2" type="search" id="searchInput" placeholder="Search" aria-label="Search" name="query">
+            <button class="btn btn-outline-primary" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Hero Section -->
+<div class="container-fluid py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold mb-4" data-translate="get_in_touch">Get in Touch</h1>
+                <p class="lead mb-4" data-translate="have_questions_or_need_assistance_were_here_to_help_reach_out_to_our_friendly_support_team">Have questions or need assistance? We're here to help! Reach out to our friendly support team.</p>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                        <i class="bi bi-envelope text-white"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0" data-translate="email_us">Email Us</h6>
+                        <p class="mb-0 text-muted">support@unimart.com</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                        <i class="bi bi-telephone text-white"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0" data-translate="call_us">Call Us</h6>
+                        <p class="mb-0 text-muted" data-translate="1_555_123-4567">+1 (555) 123-4567</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                        <i class="bi bi-geo-alt text-white" style="font-size: 1.2rem;"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0" data-translate="visit_us">Visit Us</h6>
+                        <p class="mb-0 text-muted" data-translate="123_university_assuit_faculty_of_bis">123 University Assuit, Faculty of BIS</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0">
+                <div class="card border-0 shadow-lg">
+                    <div class="card-body p-4">
+                        <h4 class="card-title mb-4" data-translate="send_us_a_message">Send Us a Message</h4>
+                        @if (TempData["SuccessMessage"] != null && TempData["SuccessMessage"].ToString().ToLower().Contains("message sent"))
+                        {
+                            <div class="alert alert-success">
+                                @TempData["SuccessMessage"]
+                            </div>
+                        }
+                        <form asp-controller="Contact" asp-action="SendMessage" method="post">
+                            <div class="mb-3">
+                                <label for="name" class="form-label" data-translate="your_name">Your Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label" data-translate="email_address">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label" data-translate="message">Message</label>
+                                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100" data-translate="send_message">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (User.Identity != null && User.Identity.IsAuthenticated && ViewBag.SupportTickets != null)
+{
+    <div class="container my-4">
+        <h5 data-translate="your_previous_support_tickets">Your Previous Support Tickets</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th data-translate="date">Date</th>
+                        <th data-translate="subject">Subject</th>
+                        <th data-translate="message">Message</th>
+                        <th data-translate="status">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var ticket in (IEnumerable<UniMart_App.Models.SupportTicket>)ViewBag.SupportTickets)
+                {
+                    <tr>
+                        <td>@ticket.SentAt.ToLocalTime().ToString("g")</td>
+                        <td>@ticket.Subject</td>
+                        <td>@ticket.Message</td>
+                        <td>@ticket.Status</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<!-- FAQ Section -->
+<div class="container py-5" id="FAQs">
+    <h2 class="text-center mb-5" data-translate="frequently_asked_questions">Frequently Asked Questions</h2>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item border-0 mb-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            How do I place an order?
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            To place an order, browse our products, add items to your cart, and proceed to checkout. You'll need to create an account or log in, provide shipping information, and complete payment. Once your order is confirmed, you'll receive an email confirmation.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item border-0 mb-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            What payment methods do you accept?
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            We accept all major credit cards (Visa, MasterCard, American Express), and campus meal plan points. For students, we also offer the option to charge purchases to your student account.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item border-0 mb-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            What is your return policy?
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            We offer a 30-day return policy for most items in new, unused condition with original packaging. Textbooks must be returned within 14 days of purchase and cannot be returned if they show signs of use or if access codes have been revealed.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item border-0 mb-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            How long does shipping take?
+                        </button>
+                    </h2>
+                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            For on-campus delivery, orders are typically delivered within 1-2 business days. For off-campus shipping, standard delivery takes 3-5 business days. Express shipping options are available at checkout for faster delivery.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item border-0 shadow-sm">
+                    <h2 class="accordion-header" id="headingFive">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            Do you offer student discounts?
+                        </button>
+                    </h2>
+                    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes! All students receive a 10% discount on regular-priced items when they log in with their university account. We also run special promotions throughout the academic year, especially during back-to-school periods.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Team Section -->
+<div class="container-fluid py-5 bg-light" id="teamSection">
+    <div class="container">
+        <h2 class="text-center mb-5" data-translate="meet_our_team">Meet Our Team</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100 team-member">
+                    <img src="/img/contact-support/samy.jpg" class="card-img-top mx-auto d-block" alt="Team Member">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" data-translate="mohamed_samy">Mohamed Samy</h5>
+                        <p class="text-muted" data-translate="full_stack_engineering">Full Stack Engineering</p>
+                        <div class="d-flex justify-content-center">
+                            <a href="#" class="text-secondary mx-2"><i class="bi bi-linkedin"></i></a>
+                            <a href="#" class="text-secondary mx-2"><i class="bi bi-twitter"></i></a>
+                            <a href="#" class="text-secondary mx-2"><i class="bi bi-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100 team-member">
+                    <img src="/img/contact-support/rabie.jpg" class="card-img-top mx-auto d-block" alt="Team Member">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" data-translate="mohamed_rabie">Mohamed Rabie</h5>
+                        <p class="text-muted" data-translate="operations_manager">Operations Manager</p>
+                        <div class="d-flex justify-content-center">
+                            <a href="#" class="text-secondary mx-2"><i class="bi bi-linkedin"></i></a>
+                            <a href="#" class="text-secondary mx-2"><i class="bi bi-twitter"></i></a>
+                            <a href="#" class="text-secondary mx-2"><i class="bi bi-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100 team-member">
+                    <img src="/img/contact-support/fargle.jpg" class="card-img-top mx-auto d-block" alt="Team Member">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" data-translate="mohamed_ahmed">Mohamed Ahmed</h5>
+                        <p class="text-muted" data-translate="front-end_developer">Front-End Developer</p>
+                        <div class="d-flex justify-content-center">
+                            <a href="#" class="text-secondary mx-2"><i class="bi bi-linkedin"></i></a>
+                            <a href="#" class="text-secondary mx-2"><i class="bi bi-twitter"></i></a>
+                            <a href="#" class="text-secondary mx-2"><i class="bi bi-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100 team-member">
+                    <img src="/img/contact-support/img.png" class="card-img-top mx-auto d-block" alt="Team Member">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" data-translate="rehab_walid">Rehab Walid</h5>
+                        <p class="text-muted" data-translate="technical_support">Technical Support</p>
+                        <div class="d-flex justify-content-center">
+                            <a href="#" class="text-secondary mx-2"><i class="bi bi-linkedin"></i></a>
+                            <a href="#" class="text-secondary mx-2"><i class="bi bi-twitter"></i></a>
+                            <a href="#" class="text-secondary mx-2"><i class="bi bi-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        // Search popup functionality
+        function toggleSearchPopup() {
+            const popup = document.getElementById('searchPopup');
+            popup.classList.toggle('d-none');
+            if (!popup.classList.contains('d-none')) {
+                document.getElementById('searchInput').focus();
+            }
+        }
+    </script>
+}

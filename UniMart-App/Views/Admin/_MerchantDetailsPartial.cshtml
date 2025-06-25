@@ -1,0 +1,225 @@
+@model UniMart_App.ViewModels.MerchantDetailViewModel
+
+<div class="merchant-details">
+    <!-- Merchant Profile Header -->
+    <div class="row mb-4">
+        <div class="col-md-2 text-center">
+            @if (!string.IsNullOrEmpty(Model.User.ProfileImageUrl))
+            {
+                <img src="@Model.User.ProfileImageUrl" alt="@Model.User.FullName" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
+            }
+            else
+            {
+                <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center text-white" style="width: 80px; height: 80px;">
+                    @Model.User.FullName.Substring(0, 1).ToUpper()
+                </div>
+            }
+        </div>
+        <div class="col-md-10">
+            <h5 class="mb-1">@Model.User.FullName</h5>
+            <p class="text-muted mb-1">
+                <i class="bi bi-envelope"></i> @Model.User.Email<br>
+                @if (!string.IsNullOrEmpty(Model.User.PhoneNumber))
+                {
+                    <i class="bi bi-phone"></i> @Model.User.PhoneNumber<br>
+                }
+                @if (!string.IsNullOrEmpty(Model.User.Address))
+                {
+                    <i class="bi bi-geo-alt"></i> @Model.User.Address
+                }
+            </p>
+            <small class="text-muted">Member since @Model.User.CreatedAt.ToString("MMMM dd, yyyy")</small>
+        </div>
+    </div>
+
+    <!-- Performance Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3 text-center">
+            <div class="bg-light rounded p-3">
+                <h3 class="mb-1 text-primary">@Model.Performance.ProductCount</h3>
+                <small class="text-muted" data-translate="total_products">Total Products</small>
+            </div>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="bg-light rounded p-3">
+                <h3 class="mb-1 text-success">@Model.Performance.OrderCount</h3>
+                <small class="text-muted" data-translate="total_orders">Total Orders</small>
+            </div>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="bg-light rounded p-3">
+                <h3 class="mb-1 text-info">@Model.Performance.Rating.ToString("0.0")</h3>
+                <small class="text-muted" data-translate="avg_rating">Avg. Rating</small>
+            </div>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="bg-light rounded p-3">
+                <h3 class="mb-1 text-warning">EGP @Model.Performance.TotalRevenue.ToString("N0")</h3>
+                <small class="text-muted" data-translate="total_revenue">Total Revenue</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Products -->
+    <div class="mb-4">
+        <h6 class="mb-3" data-translate="recent_products">Recent Products</h6>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th data-translate="product">Product</th>
+                        <th data-translate="price">Price</th>
+                        <th data-translate="stock">Stock</th>
+                        <th data-translate="status">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model.RecentProducts)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>EGP @product.Price.ToString("N2")</td>
+                            <td>@product.StockQuantity</td>
+                            <td>
+                                @if (product.IsApproved)
+                                {
+                                    <span class="badge bg-success" data-translate="approved">Approved</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning" data-translate="pending">Pending</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="mb-4">
+        <h6 class="mb-3" data-translate="recent_orders">Recent Orders</h6>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th data-translate="order_id">Order ID</th>
+                        <th data-translate="date">Date</th>
+                        <th data-translate="amount">Amount</th>
+                        <th data-translate="status">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model.RecentOrders)
+                    {
+                        <tr>
+                            <td>#@order.Id</td>
+                            <td>@order.OrderDate.ToString("MMM dd, yyyy")</td>
+                            <td>EGP @order.TotalAmount.ToString("N2")</td>
+                            <td>
+                                @switch (order.Status)
+                                {
+                                    case "Pending":
+                                        <span class="badge bg-warning">@order.Status</span>
+                                        break;
+                                    case "Processing":
+                                        <span class="badge bg-info">@order.Status</span>
+                                        break;
+                                    case "Shipped":
+                                        <span class="badge bg-success">@order.Status</span>
+                                        break;
+                                    case "Delivered":
+                                        <span class="badge bg-primary">@order.Status</span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-secondary">@order.Status</span>
+                                        break;
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Recent Ratings -->    @if (Model.RecentRatings.Any())
+    {
+        <div class="mb-4">            <h6 class="mb-3" data-translate="recent_ratings_reviews">Recent Ratings & Reviews</h6>
+            @foreach (var rating in Model.RecentRatings)
+            {
+                <div class="bg-light rounded p-3 mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <strong>@rating.User.FullName</strong>
+                            <br>
+                            <small class="text-muted">reviewed @rating.Product.Name</small>
+                        </div>
+                        <div class="text-warning">
+                            @for (int i = 0; i < rating.Rating; i++)
+                            {
+                                <i class="bi bi-star-fill"></i>
+                            }
+                            @for (int i = rating.Rating; i < 5; i++)
+                            {
+                                <i class="bi bi-star"></i>
+                            }
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(rating.Comment))
+                    {
+                        <p class="mb-0 small">@rating.Comment</p>
+                    }
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Recent System Activity -->
+    @if (Model.RecentActivities.Any())
+    {
+        <div class="mb-4">
+            <h6 class="mb-3" data-translate="recent_system_activity">Recent System Activity</h6>
+            <div class="timeline">
+                @foreach (var activity in Model.RecentActivities)
+                {
+                    <div class="timeline-item bg-light rounded p-3 mb-2">
+                        <div class="d-flex align-items-center mb-1">
+                            @if (!string.IsNullOrEmpty(activity.IconClass))
+                            {
+                                <i class="bi @activity.IconClass me-2"></i>
+                            }
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="text-dark">@activity.Description</span>
+                                    @if (!string.IsNullOrEmpty(activity.BadgeClass))
+                                    {
+                                        <span class="badge @activity.BadgeClass ms-2">@activity.ActivityType</span>
+                                    }
+                                </div>
+                                <small class="text-muted">
+                                    @{
+                                        var timeDiff = DateTime.Now - activity.CreatedAt;
+                                        if (timeDiff.TotalMinutes < 60)
+                                        {
+                                            @($"{(int)timeDiff.TotalMinutes} minutes ago")
+                                        }
+                                        else if (timeDiff.TotalHours < 24)
+                                        {
+                                            @($"{(int)timeDiff.TotalHours} hours ago")
+                                        }
+                                        else
+                                        {
+                                            @activity.CreatedAt.ToString("MMM dd, yyyy HH:mm")
+                                        }
+                                    }
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

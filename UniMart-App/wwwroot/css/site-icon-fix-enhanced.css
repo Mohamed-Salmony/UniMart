@@ -1,0 +1,136 @@
+/* Enhanced Font Awesome icon fix */
+@font-face {
+    font-family: 'Font Awesome 6 Free';
+    font-style: normal;
+    font-weight: 900;
+    src: url("/lib/fontawesome/webfonts/fa-solid-900.woff2") format("woff2");
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'Font Awesome 6 Brands';
+    font-style: normal;
+    font-weight: 400;
+    src: url("/lib/fontawesome/webfonts/fa-brands-400.woff2") format("woff2");
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'Font Awesome 6 Free';
+    font-style: normal;
+    font-weight: 400;
+    src: url("/lib/fontawesome/webfonts/fa-regular-400.woff2") format("woff2");
+    font-display: block;
+}
+
+/* Global icon styles with !important flags to override any conflicting styles */
+.fa,
+.fa-solid,
+.fas,
+.fa-brands,
+.fab,
+.fa-regular,
+.far {
+    -webkit-font-smoothing: antialiased;
+    display: inline-block !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    line-height: 1 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Solid icons */
+.fa-solid,
+.fas {
+    font-family: 'Font Awesome 6 Free' !important;
+    font-weight: 900 !important;
+}
+
+/* Regular icons */
+.fa-regular,
+.far {
+    font-family: 'Font Awesome 6 Free' !important;
+    font-weight: 400 !important;
+}
+
+/* Brand icons */
+.fa-brands,
+.fab {
+    font-family: 'Font Awesome 6 Brands' !important;
+    font-weight: 400 !important;
+}
+
+/* Additional visibility enforcement for specific contexts */
+.icons-nav .fa,
+.icons-nav .fa-solid,
+.icons-nav .fas,
+.icons-nav .fa-regular,
+.icons-nav .far,
+.icons-nav .fa-brands,
+.icons-nav .fab,
+header .fa,
+header .fa-solid,
+header .fas,
+header .fa-regular,
+header .far,
+header .fa-brands,
+header .fab,
+footer .fa,
+footer .fa-solid,
+footer .fas,
+footer .fa-regular,
+footer .far,
+footer .fa-brands,
+footer .fab,
+.login-page .fa,
+.login-page .fa-solid,
+.login-page .fas,
+.login-page .far,
+.login-page .fa-brands,
+.login-page .fab,
+.signup-page .fa,
+.signup-page .fa-solid,
+.signup-page .fas,
+.signup-page .fa-brands,
+.signup-page .fab,
+.navbar .fa,
+.navbar .fa-solid,
+.navbar .fas,
+.navbar .fa-regular,
+.navbar .far,
+.navbar .fa-brands,
+.navbar .fab {
+    display: inline-block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    color: inherit !important;
+}
+
+/* Ensure icons are visible at all screen sizes */
+@media (max-width: 768px) {
+    .fa,
+    .fa-solid,
+    .fas,
+    .fa-brands,
+    .fab,
+    .fa-regular,
+    .far {
+        display: inline-block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    .icons-nav .fa,
+    .icons-nav .fa-solid,
+    .icons-nav .fas,
+    .icons-nav .fa-regular,
+    .icons-nav .far,
+    .icons-nav .fa-brands,
+    .icons-nav .fab {
+        display: inline-block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+}

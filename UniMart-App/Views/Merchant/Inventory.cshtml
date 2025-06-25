@@ -1,0 +1,46 @@
+@model IEnumerable<UniMart_App.Models.Product>
+@{
+    ViewData["Title"] = "Inventory";
+    Layout = "_DashboardLayout";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4" data-translate="product_inventory">Product Inventory</h2>
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0" data-translate="all_products">All Products</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th data-translate="product_name">Product Name</th>
+                        <th data-translate="stock_quantity">Stock Quantity</th>
+                        <th data-translate="price">Price</th>
+                        <th data-translate="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var product in Model)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@product.StockQuantity</td>
+                            <td>EGP @product.Price.ToString("N2")</td>
+                            <td>
+                                <a asp-action="EditProduct" asp-route-id="@product.Id" class="btn btn-sm btn-primary" data-translate="edit">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="4" class="text-center" data-translate="no_products_found">No products found.</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

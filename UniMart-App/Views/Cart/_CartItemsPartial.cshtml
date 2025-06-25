@@ -1,0 +1,69 @@
+@using System.Globalization
+@model List<UniMart_App.Models.CartItem>
+@if (Model == null || !Model.Any()) {
+    <div class="alert alert-info">Your cart is empty.</div>
+} else {
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+        @foreach (var item in Model)
+        {
+            string img = null;
+            if (item.Product.ProductImages != null && item.Product.ProductImages.Any() && !string.IsNullOrEmpty(item.Product.ProductImages.First().ImageUrl))
+            {
+                var imageUrl = item.Product.ProductImages.First().ImageUrl;
+                if (imageUrl.StartsWith("http://") || imageUrl.StartsWith("https://"))
+                {
+                    img = imageUrl;
+                }
+                else if (imageUrl.StartsWith("/"))
+                {
+                    img = Url.Content(imageUrl);
+                }
+                else
+                {
+                    img = Url.Content("/" + imageUrl);
+                }
+            }
+            else
+            {
+                img = Url.Content("/img/home-page/img-1.png");
+            }
+            <div class="col">
+                <div class="card h-100 shadow-sm d-flex flex-row align-items-center p-2 card-hover position-relative" style="min-height:120px; transition: box-shadow 0.2s, transform 0.2s;">
+                    <img src="@img" class="rounded object-fit-cover me-3" style="width:100px;height:100px;object-fit:cover;" alt="Product Image" />
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1 position-relative">
+                            @item.Product.Name
+                            <a href="@Url.Action("Details", "Products", new { id = item.Product.Id })" class="stretched-link" tabindex="-1" aria-label="View product details"></a>
+                        </h6>
+                        @if (!string.IsNullOrWhiteSpace(item.SelectedOptions))
+                        {
+                            <div class="text-muted small mb-1">@item.SelectedOptions</div>
+                        }
+                        <div class="fw-bold mb-1">
+                            EGP @item.Product.Price.ToString("F2")
+                            @if (item.Product.OriginalPrice != null && item.Product.OriginalPrice > item.Product.Price)
+                            {
+                                <span class="text-muted text-decoration-line-through ms-2">EGP @item.Product.OriginalPrice?.ToString("F2")</span>
+                                <span class="badge bg-success ms-2">
+                                    Save @((((item.Product.OriginalPrice.Value - item.Product.Price) / item.Product.OriginalPrice.Value) * 100).ToString("F0"))%
+                                </span>
+                            }
+                        </div>
+                        <div class="d-flex align-items-center gap-2 position-relative" style="z-index:2;">
+                            <button class="btn btn-outline-secondary btn-sm cart-qty-btn" data-id="@item.Id" data-action="minus" type="button" aria-label="Decrease quantity"><i class="bi bi-dash"></i></button>
+                            <input id="cart-qty-input-@item.Id" type="text" class="form-control form-control-sm text-center" value="@item.Quantity" style="width:40px;" readonly aria-label="Quantity" />
+                            <button class="btn btn-outline-secondary btn-sm cart-qty-btn" data-id="@item.Id" data-action="plus" type="button" aria-label="Increase quantity"><i class="bi bi-plus"></i></button>
+                            <button class="btn btn-outline-danger btn-sm cart-remove-btn ms-2" data-id="@item.Id" type="button" aria-label="Remove item"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <style>
+        .card-hover:hover {
+            box-shadow: 0 8px 32px rgba(0,0,0,0.13), 0 2px 12px rgba(0,0,0,0.06);
+            transform: scale(1.03) translateY(-2px);
+        }
+    </style>
+}

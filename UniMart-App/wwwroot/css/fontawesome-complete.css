@@ -1,0 +1,135 @@
+/*!
+ * Complete Font Awesome Fix for UniMart App
+ * Based on Font Awesome Free 6.4.2
+ */
+
+/* Font declarations with absolute paths */
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url("/lib/fontawesome/webfonts/fa-solid-900.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("/lib/fontawesome/webfonts/fa-regular-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("/lib/fontawesome/webfonts/fa-brands-400.woff2") format("woff2");
+}
+
+/* Base styles for all icons */
+.fa,
+.fa-classic,
+.fa-sharp,
+.fas,
+.fa-solid,
+.far,
+.fa-regular,
+.fab,
+.fa-brands {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block !important;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-rendering: auto;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Solid icons */
+.fas,
+.fa-solid {
+  font-family: 'Font Awesome 6 Free' !important;
+  font-weight: 900 !important;
+}
+
+/* Regular icons */
+.far,
+.fa-regular {
+  font-family: 'Font Awesome 6 Free' !important;
+  font-weight: 400 !important;
+}
+
+/* Brand icons */
+.fab,
+.fa-brands {
+  font-family: 'Font Awesome 6 Brands' !important;
+  font-weight: 400 !important;
+}
+
+/* Additional visibility enforcement for specific contexts */
+.icons-nav .fa,
+.icons-nav .fas,
+.icons-nav .fa-solid,
+.icons-nav .far,
+.icons-nav .fa-regular,
+.icons-nav .fab,
+.icons-nav .fa-brands,
+header .fa,
+header .fas,
+header .fa-solid,
+header .far,
+header .fa-regular,
+header .fab,
+header .fa-brands,
+footer .fa,
+footer .fas,
+footer .fa-solid,
+footer .far,
+footer .fa-regular,
+footer .fab,
+footer .fa-brands,
+.login-page .fa,
+.login-page .fas,
+.login-page .fa-solid,
+.login-page .far,
+.login-page .fa-regular,
+.login-page .fab,
+.login-page .fa-brands,
+.signup-page .fa,
+.signup-page .fas,
+.signup-page .fa-solid,
+.signup-page .far,
+.signup-page .fa-regular,
+.signup-page .fab,
+.signup-page .fa-brands,
+.navbar .fa,
+.navbar .fas,
+.navbar .fa-solid,
+.navbar .far,
+.navbar .fa-regular,
+.navbar .fab,
+.navbar .fa-brands {
+  display: inline-block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: inherit !important;
+}
+
+/* Ensure icons are visible at all screen sizes */
+@media (max-width: 768px) {
+  .fa,
+  .fas,
+  .fa-solid,
+  .far,
+  .fa-regular,
+  .fab,
+  .fa-brands {
+    display: inline-block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}

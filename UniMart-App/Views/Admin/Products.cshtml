@@ -1,0 +1,383 @@
+@using System.Linq
+@model IEnumerable<UniMart_App.Models.Product>
+@{
+    ViewData["Title"] = "Product Management";
+    Layout = "_DashboardLayout";
+}
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0" data-translate="product_management">Product Management</h2>
+            <p class="text-muted" data-translate="monitor_and_manage_all_products_in_the_marketplace">Monitor and manage all products in the marketplace</p>
+        </div>
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="statusFilter" id="all" value="all" checked>
+            <label class="btn btn-outline-primary" for="all" data-translate="all_products">All Products</label>
+            
+            <input type="radio" class="btn-check" name="statusFilter" id="active" value="active">
+            <label class="btn btn-outline-success" for="active" data-translate="active">Active</label>
+
+            <input type="radio" class="btn-check" name="statusFilter" id="pending" value="pending">
+            <label class="btn btn-outline-warning" for="pending" data-translate="pending">Pending</label>
+            
+            <input type="radio" class="btn-check" name="statusFilter" id="inactive" value="inactive">
+            <label class="btn btn-outline-danger" for="inactive" data-translate="inactive">Inactive</label>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Search and Filter -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search products...">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="categoryFilter">
+                        <option value="">All Categories</option>
+                        @foreach (var faculty in ViewBag.Faculties)
+                        {
+                            <option value="@faculty.Name">@faculty.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="merchantFilter">
+                        <option value="">All Merchants</option>
+                        @foreach (var merchant in ViewBag.Merchants)
+                        {
+                            <option value="@merchant.Email">@merchant.FullName (@merchant.Email)</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Table -->
+    @if (Model.Any())
+    {
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="productsTable">
+                        <thead>
+                            <tr>
+                                <th data-translate="product">Product</th>
+                                <th data-translate="merchant">Merchant</th>
+                                <th data-translate="category">Category</th>
+                                <th data-translate="price">Price</th>
+                                <th data-translate="stock">Stock</th>
+                                <th data-translate="status">Status</th>
+                                <th data-translate="created">Created</th>
+                                <th data-translate="actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in Model)
+                            {
+                                var status = !product.IsApproved ? "pending" : (product.StockQuantity > 0 ? "active" : "inactive");
+                                <tr class="product-row" data-status="@status">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @if (product.ProductImages != null && product.ProductImages.Any())
+                                            {
+                                                <img src="@Url.Content(product.ProductImages.First().ImageUrl)" class="card-img-top me-3" alt="@product.Name" style="height: 50px; width: 50px; object-fit: cover; border-radius: 8px;">
+                                            }
+                                            else
+                                            {
+                                                <img src="/img/default-profile.png" class="card-img-top me-3" alt="No image" style="height: 50px; width: 50px; object-fit: cover; border-radius: 8px;">
+                                            }
+                                            <div>
+                                                <h6 class="mb-0">@product.Name</h6>
+                                                <small class="text-muted">ID: @product.Id</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <strong>@product.User?.FullName</strong><br>
+                                            <small class="text-muted">@product.User?.Email</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">@product.Faculty?.Name</span>
+                                    </td>
+                                    <td>
+                                        <strong class="text-primary">EGP @product.Price.ToString("N2")</strong>
+                                        @if (product.OriginalPrice.HasValue && product.OriginalPrice > product.Price)
+                                        {
+                                            <br><small class="text-muted text-decoration-line-through">EGP @product.OriginalPrice.Value.ToString("N2")</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (product.IsApproved)
+                                        {
+                                            <span class="badge bg-success" data-translate="approved">Approved</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning" data-translate="pending_approval">Pending Approval</span>
+                                        }
+                                        @if (product.StockQuantity <= 0)
+                                        {
+                                            <span class="badge bg-danger" data-translate="out_of_stock">Out of Stock</span>
+                                        }
+                                        else if (product.StockQuantity < 10)
+                                        {
+                                            <span class="badge bg-warning">Low Stock (@product.StockQuantity)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">In Stock (@product.StockQuantity)</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (product.StockQuantity > 0)
+                                        {
+                                            <span class="badge bg-success" data-translate="active">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger" data-translate="inactive">Inactive</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">@product.CreatedAt.ToString("MMM dd, yyyy")</small>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-sm btn-outline-info" target="_blank">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            @if (!product.IsApproved)
+                                            {
+                                                <button type="button" class="btn btn-sm btn-outline-success" 
+                                                        onclick="approveProduct(@product.Id)">
+                                                    <i class="bi bi-check-circle"></i>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-sm btn-outline-warning" 
+                                                        onclick="rejectProduct(@product.Id)">
+                                                    <i class="bi bi-x-circle"></i>
+                                                </button>
+                                            }
+                                            <button type="button" class="btn btn-sm btn-outline-warning" 
+                                                    onclick="toggleProductStatus(@product.Id, '@(product.StockQuantity > 0 ? "deactivate" : "activate")')">
+                                                @if (product.StockQuantity > 0)
+                                                {
+                                                    <i class="bi bi-pause-circle"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="bi bi-play-circle"></i>
+                                                }
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                    data-bs-toggle="modal" data-bs-target="#deleteModal" 
+                                                    data-product-id="@product.Id" data-product-name="@product.Name">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-box-seam text-muted" style="font-size: 4rem;"></i>
+            <h4 class="mt-3 text-muted" data-translate="no_products_found">No Products Found</h4>
+            <p class="text-muted" data-translate="products_will_appear_here_as_merchants_add_them_to_the_marketplace">Products will appear here as merchants add them to the marketplace.</p>
+        </div>
+    }
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel" data-translate="confirm_delete">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to permanently delete the product "<span id="productName"></span>"? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-translate="cancel">Cancel</button>
+                <form asp-action="DeleteProduct" method="post" id="deleteForm">
+                    <input type="hidden" name="productId" id="productId" />
+                    <button type="submit" class="btn btn-danger" data-translate="delete_product">Delete Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize variables
+            const statusFilters = document.querySelectorAll('input[name="statusFilter"]');
+            const productRows = document.querySelectorAll('.product-row');
+            
+            // Add status filter event listeners
+            statusFilters.forEach(filter => {
+                filter.addEventListener('change', applyFilters);
+            });
+
+            // Filter functionality
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const merchantFilter = document.getElementById('merchantFilter');
+
+            function applyFilters() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedCategory = categoryFilter.value.toLowerCase();
+                const selectedMerchant = merchantFilter.value.toLowerCase();
+                const selectedStatus = document.querySelector('input[name="statusFilter"]:checked').value;
+                
+                productRows.forEach(row => {
+                    const productName = row.querySelector('h6').textContent.toLowerCase();
+                    const merchantInfo = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                    const categoryBadge = row.querySelector('td:nth-child(3) .badge').textContent.toLowerCase();
+                    const rowStatus = row.dataset.status;
+                    
+                    const matchesSearch = productName.includes(searchTerm) || merchantInfo.includes(searchTerm);
+                    const matchesCategory = selectedCategory === '' || categoryBadge === selectedCategory;
+                    const matchesMerchant = selectedMerchant === '' || merchantInfo.includes(selectedMerchant);
+                    const matchesStatus = selectedStatus === 'all' || rowStatus === selectedStatus;
+                    
+                    if (matchesSearch && matchesCategory && matchesMerchant && matchesStatus) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            // Add event listeners for all filters
+            searchInput.addEventListener('input', applyFilters);
+            categoryFilter.addEventListener('change', applyFilters);
+            merchantFilter.addEventListener('change', applyFilters);
+
+            // Delete modal functionality
+            const deleteModal = document.getElementById('deleteModal');
+            if (deleteModal) {
+                deleteModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const productId = button.getAttribute('data-product-id');
+                    const productName = button.getAttribute('data-product-name');
+                    
+                    const productIdInput = document.getElementById('productId');
+                    const productNameSpan = document.getElementById('productName');
+                    
+                    productIdInput.value = productId;
+                    productNameSpan.textContent = productName;
+                });
+            }
+        });
+
+        // Toggle product status function
+        function toggleProductStatus(productId, action) {
+            if (confirm(`Are you sure you want to ${action} this product?`)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("ToggleProductStatus", "Admin")';
+                
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'productId';
+                input.value = productId;
+                
+                const token = document.querySelector('input[name="__RequestVerificationToken"]');
+                if (token) {
+                    form.appendChild(token.cloneNode());
+                }
+                
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Approve product function
+        function approveProduct(productId) {
+            if (confirm('Are you sure you want to approve this product?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("ApproveProduct", "Admin")';
+                
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'productId';
+                input.value = productId;
+                
+                const token = document.querySelector('input[name="__RequestVerificationToken"]');
+                if (token) {
+                    form.appendChild(token.cloneNode());
+                }
+                
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Reject product function
+        function rejectProduct(productId) {
+            if (confirm('Are you sure you want to reject this product?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("RejectProduct", "Admin")';
+                
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'productId';
+                input.value = productId;
+                
+                const token = document.querySelector('input[name="__RequestVerificationToken"]');
+                if (token) {
+                    form.appendChild(token.cloneNode());
+                }
+                
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+}
+

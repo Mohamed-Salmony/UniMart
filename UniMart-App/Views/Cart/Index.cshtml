@@ -1,0 +1,133 @@
+@using System.Globalization
+@model List<UniMart_App.Models.CartItem>
+@{
+    ViewBag.Title = "Cart";
+    var step = ViewBag.Step ?? 1;
+}
+<div class="row g-4 mt-3">
+    <!-- Cart Items -->
+    <div class="col-lg-8">
+        <div id="cart-items-list">
+            @await Html.PartialAsync("_CartItemsPartial", Model)
+        </div>
+    </div>
+    <!-- Order Summary -->
+    <div class="col-lg-4">
+        <div id="order-summary">
+            @await Html.PartialAsync("_OrderSummaryPartial")
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Handles cart quantity and removal actions for Cart/Index
+        // Requires Bootstrap 5, fetch API, and Bootstrap Icons
+
+        document.addEventListener('DOMContentLoaded', function () {
+            attachCartEvents();
+
+            // Promo code
+            const promoForm = document.getElementById('promo-form');
+            if (promoForm) {
+                promoForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const code = document.getElementById('promo-code').value;
+                    fetch('/Cart/ApplyPromo', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': getAntiForgeryToken() },
+                        body: JSON.stringify({ code })
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) {
+                            showToast('Promo Applied', 'success');
+                            updateOrderSummary(data.summaryHtml);
+                        } else {
+                            showToast(data.message, 'danger');
+                        }
+                    });
+                });
+            }
+        });
+
+        function updateCartQuantity(cartItemId, quantity) {
+            fetch('/Cart/UpdateQuantity', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': getAntiForgeryToken() },
+                body: JSON.stringify({ cartItemId, quantity })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    updateCartItems(data.cartHtml);
+                    updateOrderSummary(data.summaryHtml);
+                } else {
+                    showToast(data.message, 'danger');
+                }
+            });
+        }
+
+        function removeCartItem(cartItemId) {
+            fetch('/Cart/RemoveFromCart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': getAntiForgeryToken() },
+                body: JSON.stringify({ cartItemId })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    updateCartItems(data.cartHtml);
+                    updateOrderSummary(data.summaryHtml);
+                    showToast('Item removed', 'info');
+                } else {
+                    showToast(data.message, 'danger');
+                }
+            });
+        }
+
+        function updateCartItems(html) {
+            document.getElementById('cart-items-list').innerHTML = html;
+            attachCartEvents();
+        }
+
+        function attachCartEvents() {
+            document.querySelectorAll('.cart-qty-btn').forEach(btn => {
+                btn.onclick = function () {
+                    const cartItemId = this.dataset.id;
+                    const action = this.dataset.action;
+                    const qtyInput = document.querySelector(`#cart-qty-input-${cartItemId}`);
+                    let quantity = parseInt(qtyInput.value);
+                    if (action === 'plus') quantity++;
+                    else if (action === 'minus') quantity--;
+                    if (quantity < 0) quantity = 0;
+                    updateCartQuantity(cartItemId, quantity);
+                };
+            });
+            document.querySelectorAll('.cart-remove-btn').forEach(btn => {
+                btn.onclick = function () {
+                    const cartItemId = this.dataset.id;
+                    removeCartItem(cartItemId);
+                };
+            });
+        }
+        window.attachCartEvents = attachCartEvents;
+
+        function updateOrderSummary(html) {
+            document.getElementById('order-summary').innerHTML = html;
+        }
+        function showToast(message, type) {
+            // Simple toast using Bootstrap 5
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-bg-${type} border-0 show`;
+            toast.role = 'alert';
+            toast.innerHTML = `<div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        function getAntiForgeryToken() {
+            const token = document.querySelector('input[name=__RequestVerificationToken]');
+            return token ? token.value : '';
+        }
+    </script>
+}

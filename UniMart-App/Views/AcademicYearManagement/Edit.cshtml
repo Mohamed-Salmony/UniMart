@@ -1,0 +1,23 @@
+@model UniMart_App.Models.AcademicYear
+
+@{
+    ViewData["Title"] = "Edit Academic Year";
+    Layout = "_DashboardLayout";
+}
+
+<h2 data-translate="edit_academic_year">Edit Academic Year</h2>
+
+<form asp-action="Edit">
+    <div class="form-group">
+        <label asp-for="Year" class="control-label"></label>
+        <input asp-for="Year" class="form-control" />
+        <span asp-validation-for="Year" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-primary" data-translate="save">Save</button>
+    <a asp-action="Index" class="btn btn-secondary" data-translate="back_to_list">Back to List</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

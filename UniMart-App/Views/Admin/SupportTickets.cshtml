@@ -1,0 +1,94 @@
+@model IEnumerable<UniMart_App.Models.SupportTicket>
+@{
+    ViewData["Title"] = "Support Tickets";
+    Layout = "_DashboardLayout";
+}
+
+<h2 class="mb-4" data-translate="support_tickets">Support Tickets</h2>
+
+@if (TempData["ReplySuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["ReplySuccess"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th data-translate="date">Date</th>
+                <th data-translate="user">User</th>
+                <th data-translate="subject">Subject</th>
+                <th data-translate="message">Message</th>
+                <th data-translate="status">Status</th>
+                <th data-translate="actions">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var ticket in Model)
+        {
+            <tr>
+                <td>@ticket.SentAt.ToLocalTime().ToString("g")</td>
+                <td>@(ticket.User != null ? ticket.User.FullName : "Guest")</td>
+                <td>@ticket.Subject</td>
+                <td>@ticket.Message</td>
+                <td>
+                    <span class="badge @(ticket.Status == "Open" ? "bg-warning text-dark" : ticket.Status == "Closed" ? "bg-success" : "bg-secondary")">
+                        @ticket.Status
+                    </span>
+                    @{
+                        var statusOptions = new[] { "Open", "In Progress", "Closed" };
+                        var optionsHtml = "";
+                        foreach (var status in statusOptions)
+                        {
+                            var selected = ticket.Status == status ? "selected" : "";
+                            optionsHtml += $"<option value=\"{status}\" {selected}>{status}</option>";
+                        }
+                    }
+                    <form method="post" action="/Admin/UpdateTicketStatus" class="d-inline ms-2">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="ticketId" value="@ticket.Id" />
+                        <select name="status" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
+                            @Html.Raw(optionsHtml)
+                        </select>
+                    </form>
+                </td>
+                <td>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#replyModal-@ticket.Id" data-translate="reply">Reply</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<!-- Modals for replies (must be outside the table/tbody) -->
+@foreach (var ticket in Model)
+{
+    <div class="modal fade" id="replyModal-@ticket.Id" tabindex="-1" aria-labelledby="replyModalLabel-@ticket.Id" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="/Admin/ReplyToTicket">
+                    @Html.AntiForgeryToken()
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="replyModalLabel-@ticket.Id">Reply to @ticket.Subject</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="ticketId" value="@ticket.Id" />
+                        <div class="mb-3">
+                            <label for="replyMessage-@ticket.Id" class="form-label" data-translate="message">Message</label>
+                            <textarea class="form-control" id="replyMessage-@ticket.Id" name="message" rows="4" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-translate="cancel">Cancel</button>
+                        <button type="submit" class="btn btn-success" data-translate="send_reply">Send Reply</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}

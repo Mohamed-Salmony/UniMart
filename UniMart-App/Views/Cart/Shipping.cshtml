@@ -1,0 +1,31 @@
+@model UniMart_App.Controllers.ShippingViewModel
+@{
+    ViewBag.Title = "Shipping Information";
+}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="mb-3" data-translate="shipping_information">Shipping Information</h4>
+                    <form asp-action="Shipping" method="post" autocomplete="off">
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label" data-translate="address">Address</label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label" data-translate="phone_number">Phone Number</label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100" data-translate="continue_to_payment">Continue to Payment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section  Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

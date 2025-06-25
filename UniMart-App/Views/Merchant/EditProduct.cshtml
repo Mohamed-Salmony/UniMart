@@ -1,0 +1,268 @@
+@model UniMart_App.Models.Product
+@{
+    ViewData["Title"] = "Edit Product";
+    Layout = "_DashboardLayout";
+}
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0" data-translate="edit_product">Edit Product</h2>
+            <p class="text-muted" data-translate="update_your_product_information">Update your product information</p>
+        </div>
+        <a asp-action="Products" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Products
+        </a>
+    </div>
+
+    <!-- Product Form -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0" data-translate="product_information">Product Information</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="EditProduct" method="post" enctype="multipart/form-data">
+                        <input asp-for="Id" type="hidden" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="Name" class="form-label" data-translate="product_name">Product Name *</label>
+                                <input asp-for="Name" class="form-control" placeholder="Enter product name" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="FacultyId" class="form-label" data-translate="category">Category *</label>
+                                <select asp-for="FacultyId" class="form-select">
+                                    <option value="">Select Category</option>
+                                    @foreach (var faculty in ViewBag.Faculties as List<UniMart_App.Models.Faculty>)
+                                    {
+                                        <option value="@faculty.Id" selected="@(faculty.Id == Model.FacultyId)">@faculty.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="FacultyId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label" data-translate="description">Description *</label>
+                            <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe your product in detail..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Price" class="form-label" data-translate="price">Price ($) *</label>
+                                <input asp-for="Price" type="number" step="0.01" min="0" class="form-control" placeholder="0.00" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="OriginalPrice" class="form-label" data-translate="original_price">Original Price ($)</label>
+                                <input asp-for="OriginalPrice" type="number" step="0.01" min="0" class="form-control" placeholder="0.00" />
+                                <span asp-validation-for="OriginalPrice" class="text-danger"></span>
+                                <small class="form-text text-muted" data-translate="leave_empty_if_no_discount">Leave empty if no discount</small>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="StockQuantity" class="form-label" data-translate="stock_quantity">Stock Quantity *</label>
+                                <input asp-for="StockQuantity" type="number" min="0" class="form-control" placeholder="0" />
+                                <span asp-validation-for="StockQuantity" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Specifications" class="form-label" data-translate="specifications">Specifications</label>
+                            <textarea asp-for="Specifications" class="form-control" rows="3" placeholder="Technical specifications, features, dimensions, etc."></textarea>
+                            <span asp-validation-for="Specifications" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="imageFile" class="form-label" data-translate="product_image">Product Image</label>
+                            <input type="file" name="imageFile" id="imageFile" class="form-control" accept="image/*" />
+                            <small class="form-text text-muted" data-translate="leave_empty_to_keep_current_image_supported_formats_jpg_png_gif_max_size_5mb">Leave empty to keep current image. Supported formats: JPG, PNG, GIF. Max size: 5MB</small>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Products" class="btn btn-secondary" data-translate="cancel">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Update Product
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Current Images -->
+            @if (Model.ProductImages != null && Model.ProductImages.Any())
+            {
+                <div class="card shadow mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0" data-translate="current_images">Current Images</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        @foreach (var img in Model.ProductImages)
+                        {
+                            if (!string.IsNullOrEmpty(img.ImageUrl))
+                            {
+                                <img src="@img.ImageUrl" alt="@Model.Name" class="img-fluid rounded mb-2" style="max-height: 200px; max-width: 100%;" />
+                            }
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card shadow mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0" data-translate="current_images">Current Images</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <img src="/img/default-profile.png" alt="No image" class="img-fluid rounded" style="max-height: 200px;" />
+                    </div>
+                </div>
+            }
+
+            <!-- Product Stats -->
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0" data-translate="product_statistics">Product Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span data-translate="created">Created:</span>
+                            <span class="text-muted">@Model.CreatedAt.ToString("MMM dd, yyyy")</span>
+                        </div>
+                    </div>
+                    
+                    @if (Model.Rating.HasValue)
+                    {
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span data-translate="rating">Rating:</span>
+                                <div>
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        @if (i <= Model.Rating)
+                                        {
+                                            <i class="bi bi-star-fill text-warning"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-star text-muted"></i>
+                                        }
+                                    }
+                                    <small class="text-muted ms-1">(@Model.Rating.Value.ToString("N1"))</small>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span data-translate="status">Status:</span>
+                            @if (Model.StockQuantity <= 0)
+                            {
+                                <span class="badge bg-danger" data-translate="out_of_stock">Out of Stock</span>
+                            }
+                            else if (Model.StockQuantity < 10)
+                            {
+                                <span class="badge bg-warning" data-translate="low_stock">Low Stock</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success" data-translate="in_stock">In Stock</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0" data-translate="update_tips">Update Tips</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6><i class="bi bi-graph-up text-success"></i> Boost Visibility</h6>
+                        <p class="small text-muted" data-translate="update_your_product_regularly_to_improve_search_ranking">Update your product regularly to improve search ranking.</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6><i class="bi bi-camera text-info"></i> Fresh Images</h6>
+                        <p class="small text-muted" data-translate="new_images_can_increase_customer_engagement">New images can increase customer engagement.</p>
+                    </div>
+                    
+                    <div class="mb-0">
+                        <h6><i class="bi bi-tag text-warning"></i> Competitive Pricing</h6>
+                        <p class="small text-muted" data-translate="review_your_pricing_regularly_to_stay_competitive">Review your pricing regularly to stay competitive.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Image Preview -->
+            <div class="card shadow mt-4" id="imagePreviewCard" style="display: none;">
+                <div class="card-header">
+                    <h5 class="mb-0" data-translate="new_image_preview">New Image Preview</h5>
+                </div>
+                <div class="card-body text-center">
+                    <img id="imagePreview" src="" alt="Preview" class="img-fluid rounded" style="max-height: 200px;" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageInput = document.getElementById('imageFile');
+            const imagePreview = document.getElementById('imagePreview');
+            const imagePreviewCard = document.getElementById('imagePreviewCard');
+            
+            imageInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreviewCard.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    imagePreviewCard.style.display = 'none';
+                }
+            });
+
+            // Auto-calculate discount percentage
+            const priceInput = document.querySelector('input[name="Price"]');
+            const originalPriceInput = document.querySelector('input[name="OriginalPrice"]');
+            
+            function updateDiscountDisplay() {
+                const price = parseFloat(priceInput.value) || 0;
+                const originalPrice = parseFloat(originalPriceInput.value) || 0;
+                
+                if (originalPrice > price && price > 0) {
+                    const discount = ((originalPrice - price) / originalPrice * 100).toFixed(0);
+                    originalPriceInput.title = `${discount}% discount`;
+                } else {
+                    originalPriceInput.title = '';
+                }
+            }
+            
+            priceInput.addEventListener('input', updateDiscountDisplay);
+            originalPriceInput.addEventListener('input', updateDiscountDisplay);
+            
+            // Initial calculation
+            updateDiscountDisplay();
+        });
+    </script>
+}
+

@@ -1,0 +1,85 @@
+@using UniMart_App.Models
+@model IEnumerable<ApplicationUser>
+@{
+    ViewData["Title"] = "Manage Admins";
+    Layout = "_DashboardLayout";
+}
+
+<div class="container py-4">
+    <h2 data-translate="manage_administrators">Manage Administrators</h2>
+    <p class="text-muted" data-translate="add_or_remove_administrator_privileges_for_users">Add or remove administrator privileges for users</p>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0" data-translate="current_administrators">Current Administrators</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th data-translate="name">Name</th>
+                                    <th data-translate="email">Email</th>
+                                    <th data-translate="actions">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var admin in ViewBag.AdminUsers)
+                                {
+                                    <tr>
+                                        <td>@admin.FullName</td>
+                                        <td>@admin.Email</td>
+                                        <td>
+                                            <form asp-action="RemoveAdmin" method="post" onsubmit="return confirm('Are you sure you want to remove admin privileges from this user?');">
+                                                <input type="hidden" name="userId" value="@admin.Id" />
+                                                <button type="submit" class="btn btn-sm btn-danger" data-translate="remove_admin">Remove Admin</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0" data-translate="regular_users">Regular Users</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th data-translate="name">Name</th>
+                                    <th data-translate="email">Email</th>
+                                    <th data-translate="actions">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in ViewBag.RegularUsers)
+                                {
+                                    <tr>
+                                        <td>@user.FullName</td>
+                                        <td>@user.Email</td>
+                                        <td>
+                                            <form asp-action="AddAdmin" method="post">
+                                                <input type="hidden" name="userId" value="@user.Id" />
+                                                <button type="submit" class="btn btn-sm btn-success" data-translate="make_admin">Make Admin</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

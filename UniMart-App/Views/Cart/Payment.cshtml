@@ -1,0 +1,43 @@
+@model UniMart_App.Models.PaymentViewModel
+@{
+    ViewBag.Title = "Payment";
+}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="mb-3" data-translate="payment_information">Payment Information</h4>
+                    <form asp-action="Payment" method="post" autocomplete="off">
+                        <div class="mb-3">
+                            <label asp-for="CardholderName" class="form-label" data-translate="cardholder_name">Cardholder Name</label>
+                            <input asp-for="CardholderName" class="form-control" />
+                            <span asp-validation-for="CardholderName" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="CardNumber" class="form-label" data-translate="card_number">Card Number</label>
+                            <input asp-for="CardNumber" class="form-control" maxlength="19" inputmode="numeric" />
+                            <span asp-validation-for="CardNumber" class="text-danger small"></span>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label asp-for="Expiry" class="form-label" data-translate="expiry_mmyy">Expiry (MM/YY)</label>
+                                <input asp-for="Expiry" class="form-control" maxlength="5" placeholder="MM/YY" />
+                                <span asp-validation-for="Expiry" class="text-danger small"></span>
+                            </div>
+                            <div class="col">
+                                <label asp-for="CVV" class="form-label" data-translate="cvv">CVV</label>
+                                <input asp-for="CVV" class="form-control" maxlength="4" inputmode="numeric" />
+                                <span asp-validation-for="CVV" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100" data-translate="pay_place_order">Pay & Place Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

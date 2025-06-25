@@ -1,0 +1,343 @@
+@model UniMart_App.ViewModels.SettingsViewModel
+@{
+    ViewData["Title"] = "Settings";
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/front-end/Settings.css">
+}
+
+<div class="container mt-4">
+    <h4 class="mb-4" data-translate="settingsTitle">Settings</h4>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert" data-translate="successMessage">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="settings-nav">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <button class="nav-link active" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="true" data-translate="profileTab">
+                        <i class="bi bi-person-circle"></i> <span data-translate="profileTab">Profile</span>
+                    </button>
+                    <button class="nav-link" id="v-pills-security-tab" data-bs-toggle="pill" data-bs-target="#v-pills-security" type="button" role="tab" aria-controls="v-pills-security" aria-selected="false" data-translate="securityTab">
+                        <i class="bi bi-shield-lock"></i> <span data-translate="securityTab">Security</span>
+                    </button>
+                    <button class="nav-link" id="v-pills-appearance-tab" data-bs-toggle="pill" data-bs-target="#v-pills-appearance" type="button" role="tab" aria-controls="v-pills-appearance" aria-selected="false" data-translate="appearanceTab">
+                        <i class="bi bi-palette"></i> <span data-translate="appearanceTab">Appearance</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <!-- Profile Settings -->
+                <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                    <div class="settings-card">
+                        <h5 class="settings-title" data-translate="profileInfo">Profile Information</h5>
+                        <form asp-controller="Account" asp-action="UpdateSettings" method="post" enctype="multipart/form-data" id="profileForm">
+                            <div asp-validation-summary="ModelOnly" class="text-danger" id="validationSummary"></div>
+                            <div class="mb-3 text-center">
+                                <img src="@Model.ProfileImageUrl" alt="Profile Image" class="profile-image mb-3" id="profileImagePreview" />
+                                <div class="mb-3">
+                                    <label asp-for="ProfileImage" class="form-label" data-translate="uploadProfileImage">Upload New Profile Image</label>
+                                    <input asp-for="ProfileImage" type="file" class="form-control" accept="image/*" id="profileImageInput" />
+                                    <span asp-validation-for="ProfileImage" class="text-danger"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="FullName" class="form-label" data-translate="fullNameLabel">Full Name</label>
+                                <input asp-for="FullName" class="form-control" />
+                                <span asp-validation-for="FullName" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="Email" class="form-label" data-translate="emailLabel">Email</label>
+                                <input asp-for="Email" class="form-control" readonly />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                                <small class="form-text text-muted" data-translate="emailNote">Email cannot be changed. Contact support if you need to update your email.</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="PhoneNumber" class="form-label" data-translate="phoneLabel">Phone Number</label>
+                                <input asp-for="PhoneNumber" class="form-control" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary" data-translate="saveChanges">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Security Settings -->
+                <div class="tab-pane fade" id="v-pills-security" role="tabpanel" aria-labelledby="v-pills-security-tab">
+                    <div class="settings-card">
+                        <h5 class="settings-title" data-translate="changePassword">Change Password</h5>
+                        <form asp-controller="Account" asp-action="ChangePassword" method="post">
+                            <div class="mb-3">
+                                <label for="CurrentPassword" class="form-label" data-translate="currentPassword">Current Password</label>
+                                <input type="password" id="CurrentPassword" name="CurrentPassword" class="form-control" required />
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="NewPassword" class="form-label" data-translate="newPassword">New Password</label>
+                                <input type="password" id="NewPassword" name="NewPassword" class="form-control" required />
+                                <small class="form-text text-muted" data-translate="passwordNote">Password must be at least 6 characters long and include at least one letter, one number, and one special character.</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="ConfirmPassword" class="form-label" data-translate="confirmPassword">Confirm New Password</label>
+                                <input type="password" id="ConfirmPassword" name="ConfirmPassword" class="form-control" required />
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary" data-translate="changePasswordBtn">Change Password</button>
+                        </form>
+                    </div>
+                    
+                    <div class="settings-card mt-4">
+                        <h5 class="settings-title" data-translate="loginSessions">Login Sessions</h5>
+                        <p data-translate="logoutAllNote">You can log out from all devices where you're currently logged in.</p>
+                        <form asp-controller="Account" asp-action="LogoutAllSessions" method="post">
+                            <button type="submit" class="btn btn-danger" data-translate="logoutAllBtn">Log Out All Sessions</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Appearance Settings -->
+                <div class="tab-pane fade" id="v-pills-appearance" role="tabpanel" aria-labelledby="v-pills-appearance-tab">
+                    <div class="settings-card">
+                        <h5 class="settings-title" data-translate="theme">Theme</h5>
+                        <div class="theme-options">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="themeOption" id="lightTheme" value="light" checked>
+                                <label class="form-check-label" for="lightTheme" data-translate="lightMode">Light Mode</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="themeOption" id="darkTheme" value="dark">
+                                <label class="form-check-label" for="darkTheme" data-translate="darkMode">Dark Mode</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="themeOption" id="systemTheme" value="system">
+                                <label class="form-check-label" for="systemTheme" data-translate="systemMode">Use System Setting</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-card mt-4">
+                        <h5 class="settings-title" data-translate="language">Language</h5>
+                        <select class="form-select" id="languageSelect">
+                            <option value="en" data-translate="englishOption">English</option>
+                            <option value="ar" data-translate="arabicOption">Arabic</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        if (typeof translations === 'undefined') {
+            // Language translations
+            const translations = {
+                en: {
+                    settingsTitle: "Settings",
+                    successMessage: "Profile updated successfully.",
+                    profileTab: "Profile",
+                    securityTab: "Security",
+                    appearanceTab: "Appearance",
+                    profileInfo: "Profile Information",
+                    uploadProfileImage: "Upload New Profile Image",
+                    fullNameLabel: "Full Name",
+                    emailLabel: "Email",
+                    emailNote: "Email cannot be changed. Contact support if you need to update your email.",
+                    phoneLabel: "Phone Number",
+                    saveChanges: "Save Changes",
+                    changePassword: "Change Password",
+                    currentPassword: "Current Password",
+                    newPassword: "New Password",
+                    passwordNote: "Password must be at least 6 characters long and include at least one letter, one number, and one special character.",
+                    confirmPassword: "Confirm New Password",
+                    changePasswordBtn: "Change Password",
+                    loginSessions: "Login Sessions",
+                    logoutAllNote: "You can log out from all devices where you're currently logged in.",
+                    logoutAllBtn: "Log Out All Sessions",
+                    theme: "Theme",
+                    lightMode: "Light Mode",
+                    darkMode: "Dark Mode",
+                    systemMode: "Use System Setting",
+                    language: "Language",
+                    englishOption: "English",
+                    arabicOption: "Arabic"
+                },
+                ar: {
+                    settingsTitle: "الإعدادات",
+                    successMessage: "تم تحديث الملف الشخصي بنجاح.",
+                    profileTab: "الملف الشخصي",
+                    securityTab: "الأمان",
+                    appearanceTab: "المظهر",
+                    profileInfo: "معلومات الملف الشخصي",
+                    uploadProfileImage: "تحميل صورة جديدة للملف الشخصي",
+                    fullNameLabel: "الاسم الكامل",
+                    emailLabel: "البريد الإلكتروني",
+                    emailNote: "لا يمكن تغيير البريد الإلكتروني. يرجى التواصل مع الدعم إذا كنت بحاجة لتحديث بريدك الإلكتروني.",
+                    phoneLabel: "رقم الهاتف",
+                    saveChanges: "حفظ التغييرات",
+                    changePassword: "تغيير كلمة المرور",
+                    currentPassword: "كلمة المرور الحالية",
+                    newPassword: "كلمة المرور الجديدة",
+                    passwordNote: "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل وتحتوي على حرف ورقم وحرف خاص.",
+                    confirmPassword: "تأكيد كلمة المرور الجديدة",
+                    changePasswordBtn: "تغيير كلمة المرور",
+                    loginSessions: "جلسات تسجيل الدخول",
+                    logoutAllNote: "يمكنك تسجيل الخروج من جميع الأجهزة التي تم تسجيل الدخول إليها حالياً.",
+                    logoutAllBtn: "تسجيل الخروج من جميع الجلسات",
+                    theme: "المظهر",
+                    lightMode: "وضع النهار",
+                    darkMode: "وضع الليل",
+                    systemMode: "استخدام إعداد النظام",
+                    language: "اللغة",
+                    englishOption: "الإنجليزية",
+                    arabicOption: "العربية"
+                }
+            };
+        }
+
+        function applyLanguage(lang) {
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        function setLanguage(lang) {
+            localStorage.setItem('language', lang);
+            applyLanguage(lang);
+        }
+
+        function getSavedLanguage() {
+            return localStorage.getItem('language') || 'en';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme selection
+            const themeOptions = document.querySelectorAll('input[name="themeOption"]');
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.querySelectorAll('input[name="themeOption"]').forEach(option => {
+                if (option.value === savedTheme) {
+                    option.checked = true;
+                }
+            });
+            themeOptions.forEach(option => {
+                option.addEventListener('change', function() {
+                    if (this.checked) {
+                        const selectedTheme = this.value;
+                        localStorage.setItem('theme', selectedTheme);
+                        if (selectedTheme === 'dark') {
+                            document.body.classList.add('dark-mode');
+                        } else {
+                            document.body.classList.remove('dark-mode');
+                        }
+                    }
+                });
+            });
+
+            // Language selection
+            const languageSelect = document.getElementById('languageSelect');
+            const lang = getSavedLanguage();
+            applyLanguage(lang);
+            if (languageSelect) {
+                languageSelect.value = lang;
+                languageSelect.addEventListener('change', function() {
+                    setLanguage(this.value);
+                });
+            }
+
+            // Profile image preview
+            const profileImageInput = document.getElementById('profileImageInput');
+            const profileImagePreview = document.getElementById('profileImagePreview');
+            if (profileImageInput) {
+                profileImageInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(evt) {
+                            profileImagePreview.src = evt.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        fetch('/Account/UploadProfileImage', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success && data.profileImageUrl) {
+                                profileImagePreview.src = data.profileImageUrl;
+                            } else if (data.error) {
+                                alert(data.error);
+                            }
+                        })
+                        .catch(() => {
+                            alert('Failed to upload image. Please try again.');
+                        });
+                    }
+                });
+            }
+
+            // AJAX form submit for profile
+            const profileForm = document.getElementById('profileForm');
+            if (profileForm) {
+                profileForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(profileForm);
+                    fetch(profileForm.action, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const validationSummary = document.getElementById('validationSummary');
+                        if (data.success) {
+                            if (data.profileImageUrl) {
+                                profileImagePreview.src = data.profileImageUrl;
+                            }
+                            if (validationSummary) {
+                                validationSummary.innerHTML = `<div class="alert alert-success" data-translate="successMessage">${translations[getSavedLanguage()].successMessage}</div>`;
+                            }
+                        } else if (data.errors) {
+                            let errorHtml = '<ul>';
+                            for (const err of data.errors) {
+                                errorHtml += `<li>${err}</li>`;
+                            }
+                            errorHtml += '</ul>';
+                            if (validationSummary) {
+                                validationSummary.innerHTML = errorHtml;
+                            }
+                        }
+                    })
+                    .catch(() => {
+                        const validationSummary = document.getElementById('validationSummary');
+                        if (validationSummary) {
+                            validationSummary.innerHTML = '<div class="alert alert-danger">Failed to update profile. Please try again.</div>';
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,379 @@
+@using Microsoft.AspNetCore.Identity
+@using UniMart_App.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - UniMart</title>
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css"/>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/dark-mode.css" />
+    <link rel="icon" type="image/png" href="/img/img.png" />
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .content-wrapper {
+            flex: 1 0 auto;
+        }
+        footer {
+            flex-shrink: 0;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .navbar-nav .nav-link {
+            font-weight: 500;
+        }
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .unimart-blue {
+            color: #89CFF0;
+        }
+      .unimart-orange {
+            color: #FFA500;
+        }
+        .footer-link, .footer-link:visited {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.2s, text-decoration 0.2s;
+}
+.footer-link:hover, .footer-link:focus {
+    color: #F6C219;
+    text-decoration: underline;
+}
+.footer-link.text-decoration-none, .footer-link.text-decoration-none:hover, .footer-link.text-decoration-none:focus {
+    text-decoration: none !important;
+    color: #fff;
+}
+.footer-title {
+    letter-spacing: 1px;
+    font-size: 1.1rem;
+    color: #F6C219;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+.footer-social a {
+    color: #fff;
+    font-size: 1.4rem;
+    margin: 0 0.5rem;
+    transition: color 0.2s;
+}
+.footer-social a:hover {
+    color: #F6C219;
+}
+.footer-logo-anim {
+    transition: transform 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
+}
+.footer-logo-anim:hover {
+    transform: scale(1.08) rotate(-3deg);
+    box-shadow: 0 8px 32px rgba(246,194,25,0.18);
+}
+.footer-section .footer-title {
+    text-align: left;
+}
+.footer-section .footer-link, .footer-section .footer-link:visited {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.25rem;
+}
+.footer-section .footer-social {
+    text-align: left;
+}
+}
+
+    </style>
+    @RenderSection("Styles", required: false)
+    <script src="~/js/language.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+             <img src="/img/img-1.png" alt="UniMart Logo" width="40" height="40" class="rounded-circle" style="object-fit:cover;">
+             <span class="text-dark fw-bolder" data-translate="uni">UNI</span><span class="fw-normal" style="color:rgba(229,173,64,255)" data-translate="mart">MART</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link protected-link" asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-house"></i> <span data-translate="home">Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link protected-link" asp-controller="Products" asp-action="Index">
+                            <i class="bi bi-grid"></i> <span data-translate="products">Products</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link protected-link" asp-controller="Home" asp-action="Faculties">
+                            <i class="bi bi-tags"></i> <span data-translate="categories">Categories</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link protected-link" asp-controller="Contact" asp-action="Index">
+                            <i class="bi bi-envelope"></i> <span data-translate="contact">Contact</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <!-- Shopping Cart -->
+                        @if (User.IsInRole("User") || User.IsInRole("Merchant"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link position-relative" asp-controller="Cart" asp-action="Index">
+                                    <i class="bi bi-cart"></i> <span data-translate="cart">Cart</span>
+                                    <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="display:none; background-color:rgb(246, 194, 25); color:#111827;">
+                                        0
+                                        <span class="visually-hidden" data-translate="items-in-cart">items in cart</span>
+                                    </span>
+                                </a>
+                            </li>
+                        }
+                        
+                        <!-- Notification Bell -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-bell"></i>
+                                <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="display:none; background-color:rgb(246, 194, 25); color:#111827;">
+                                    0
+                                    <span class="visually-hidden" data-translate="unread-notifications">unread notifications</span>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="notificationDropdown" style="min-width: 320px; max-width: 400px;">
+                                <li id="notificationList">
+                                    <div class="p-3 text-center text-muted">
+                                        <div class="spinner-border spinner-border-sm" role="status"></div>
+                                        <span class="ms-2" data-translate="loading">Loading...</span>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="text-center"><a href="@Url.Action("Notifications", "Account")" class="dropdown-item" data-translate="view-all-notifications">View all notifications</a></li>
+                            </ul>
+                        </li>
+                        
+                        <!-- User Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                                @if (!string.IsNullOrEmpty(UserManager.GetUserAsync(User).Result?.ProfileImageUrl))
+                                {
+                                    <img src="@UserManager.GetUserAsync(User).Result?.ProfileImageUrl" alt="Profile" class="rounded-circle me-2" style="width: 24px; height: 24px; object-fit: cover;">
+                                }
+                                else
+                                {
+                                    var user = UserManager.GetUserAsync(User).Result;
+                                    var initial = user?.FullName != null && user.FullName.Length > 0 ? user.FullName.Substring(0, 1).ToUpper() : "U";
+                                    <div class="bg-light rounded-circle me-2 d-flex align-items-center justify-content-center text-primary" style="width: 24px; height: 24px; font-size: 12px;">
+                                        @initial
+                                    </div>
+                                }
+                                @(UserManager.GetUserAsync(User).Result?.FullName ?? "User")
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><h6 class="dropdown-header">
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <span class="badge bg-danger" data-translate="admin">Admin</span>
+                                    }
+                                    else if (User.IsInRole("Merchant"))
+                                    {
+                                        <span class="badge bg-warning" data-translate="merchant">Merchant</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-info" data-translate="customer">Customer</span>
+                                    }
+                                </h6></li>
+                                <li><hr class="dropdown-divider"></li>
+                                
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">
+                                        <i class="bi bi-speedometer2"></i> <span data-translate="admin-dashboard">Admin Dashboard</span>
+                                    </a></li>
+                                }
+                                
+                                @if (User.IsInRole("Merchant"))
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Merchant" asp-action="Dashboard">
+                                        <i class="bi bi-shop"></i> <span data-translate="my-dashboard">My Dashboard</span>
+                                    </a></li>
+                                }
+                                
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">
+                                    <i class="bi bi-person"></i> <span data-translate="my-profile">My Profile</span>
+                                </a></li>
+                                
+                                @if (User.IsInRole("User") || User.IsInRole("Merchant"))
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Orders" asp-action="MyOrders">
+                                        <i class="bi bi-bag"></i> <span data-translate="my-orders">My Orders</span>
+                                    </a></li>
+                                    <li><a class="dropdown-item" asp-controller="Favorites" asp-action="Index">
+                                        <i class="bi bi-heart"></i> <span data-translate="favorites">Favorites</span>
+                                    </a></li>
+                                }
+                                
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Settings">
+                                    <i class="bi bi-gear"></i> <span data-translate="settings">Settings</span>
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="bi bi-box-arrow-right"></i> <span data-translate="logout">Logout</span>
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                <i class="bi bi-box-arrow-in-right"></i> <span data-translate="login">Login</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="SignUp">
+                                <i class="bi bi-person-plus"></i> <span data-translate="register">Register</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content-wrapper">
+        @RenderBody()
+    </div>
+    
+<!-- Footer -->
+<footer class="text-start text-white footer-section bg-dark" style="background-color: #111827;">
+    <div class="container py-3">
+        <div class="row g-4 align-items-center">
+            <a class="col-12 col-md-4 col-lg-4 mb-4 mb-md-0 d-flex align-items-center justify-content-center justify-content-md-start footer-link" href="@Url.Action("Index", "Home")">
+                <img src="/img/img.png" alt="UniMart Logo" width="160" height="160" class="rounded-circle me-3 footer-logo-anim" style="object-fit:cover;">
+                <div>
+                    <p class="mt-2 mb-0" data-translate="footer-desc">Your one-stop shop for all university supplies.</p>
+                </div>
+            </a>
+            <div class="col-6 col-md-2 col-lg-2 mb-4 mb-md-0">
+                <h6 class="footer-title" data-translate="quick-links">Quick Links</h6>
+                <p><a class="footer-link protected-link" href="@Url.Action("Index", "Contact")#teamSection"><i class="bi bi-info-circle"></i> <span data-translate="about">About</span></a></p>
+                <p><a asp-controller="Contact" asp-action="Index" class="footer-link protected-link"><i class="bi bi-tags"></i> <span data-translate="contact">Contact</span></a></p>
+                <p><a class="footer-link protected-link" href="@Url.Action("Index", "Contact")#FAQs"><i class="bi bi-question-circle"></i> <span data-translate="faqs">FAQs</span></a></p>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2 mb-4 mb-md-0">
+                <h6 class="footer-title" data-translate="categories">Categories</h6>
+                <p><a asp-controller="Home" asp-action="Faculty" asp-route-id="1" class="footer-link protected-link"><span data-translate="engineering">Engineering</span></a></p>
+                <p><a asp-controller="Home" asp-action="Faculty" asp-route-id="4" class="footer-link protected-link"><span data-translate="medicine">Medicine</span></a></p>
+                <p><a asp-controller="Home" asp-action="Faculty" asp-route-id="6" class="footer-link protected-link"><span data-translate="arts">Arts</span></a></p>
+                <p><a asp-controller="Home" asp-action="Faculty" asp-route-id="5" class="footer-link protected-link"><span data-translate="business">Business</span></a></p>
+            </div>
+            <div class="col-12 col-md-3 col-lg-3 text-center text-md-start">
+                <h6 class="footer-title" data-translate="connect-with-us">Connect With Us</h6>
+                <div class="footer-social">
+                    <a href="#" class="me-3 mx-2"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="me-3 mx-2"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="me-3 mx-2"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="me-3 mx-2"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-4 mt-4 text-center w-100" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
+        <small class="text-white-50" data-translate="copyright">© 2025 UniMart. All rights reserved.</small>
+    </div>
+</footer>
+    
+    <!-- Core JavaScript -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JavaScript -->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="~/js/darkMode.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Notification Count (load on page load and on dropdown open)
+            function loadNotifications() {
+                $.get('/NotificationApi/UserNotifications', function (data) {
+                    var $list = $('#notificationList');
+                    $list.empty();
+                    if (data && data.length > 0) {
+                        let unreadCount = data.filter(n => !n.isRead).length;
+                        if (unreadCount > 0) {
+                            $('#notificationCount').text(unreadCount).show();
+                        } else {
+                            $('#notificationCount').hide();
+                        }
+                        data.slice(0, 5).forEach(function (n) {
+                            $list.append(`
+                                <a href="${n.actionUrl || '#'}" class="dropdown-item d-flex align-items-start ${n.isRead ? '' : 'fw-bold'}">
+                                    <i class="bi bi-bell me-2 text-info"></i>
+                                    <div>
+                                        <div>${n.title}</div>
+                                        <small class="text-muted">${new Date(n.createdAt).toLocaleString()}</small>
+                                    </div>
+                                </a>
+                            `);
+                        });
+                    } else {
+                        $('#notificationCount').hide();
+                        $list.append('<div class="p-3 text-center text-muted">No notifications</div>');
+                    }
+                });
+            }
+            // Load notification count on page load
+            loadNotifications();
+            $('#notificationDropdown').on('show.bs.dropdown', loadNotifications);
+
+            function loadCartCount() {
+                $.get('/Cart/GetCartCount', function (data) {
+                    if (data && data.count > 0) {
+                        $('#cartCount').text(data.count).show();
+                    } else {
+                        $('#cartCount').hide();
+                    }
+                });
+            }
+            loadCartCount();
+
+            // Protect links for unauthenticated users
+            var isAuthenticated = @((SignInManager.IsSignedIn(User)).ToString().ToLower());
+            if (!isAuthenticated) {
+                $(document).on('click', 'a.protected-link', function (e) {
+                    e.preventDefault();
+                    window.location.href = '/Account/Login';
+                });
+            }
+        });
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

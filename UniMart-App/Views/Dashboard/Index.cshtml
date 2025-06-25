@@ -1,0 +1,194 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_DashboardLayout";
+}
+
+<div class="container py-4">
+    <div class="row g-3">
+        <div class="col-md-3">
+            <div class="card card-stat p-3">
+                <i class="bi bi-cart text-primary icon-large"></i>
+                <div>
+                    <h6 data-translate="total_orders">Total Orders</h6>
+                    <h4>@ViewBag.TotalOrders</h4>
+                    <small class="text-success" data-translate="125_vs_last_week">↑ 12.5% vs last week</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-stat p-3">
+                <i class="bi bi-currency-dollar text-success icon-large"></i>
+                <div>
+                    <h6 data-translate="revenue">Revenue</h6>
+                    <h4>$@ViewBag.TotalRevenue.ToString("N2")</h4>
+                    <small class="text-success" data-translate="82_vs_last_week">↑ 8.2% vs last week</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-stat p-3">
+                <i class="bi bi-people text-warning icon-large"></i>
+                <div>
+                    <h6 data-translate="active_users">Active Users</h6>
+                    <h4>@ViewBag.ActiveUsers</h4>
+                    <small class="text-danger" data-translate="31_vs_last_week">↓ 3.1% vs last week</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-stat p-3">
+                <i class="bi bi-calendar-date text-info icon-large"></i>
+                <div>
+                    <h6 data-translate="daily_orders">Daily Orders</h6>
+                    <h4>@ViewBag.DailyOrders</h4>
+                    <small class="text-success" data-translate="138">↑ 13.8%</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4 g-3">
+        <div class="col-md-6">
+            <div class="card p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 data-translate="sales_trends">Sales Trends</h6>
+                    <div>
+                        <button class="btn btn-sm btn-outline-primary" onclick="updateSalesChart('today')" data-translate="today">Today</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="updateSalesChart('week')" data-translate="last_week">Last Week</button>
+                    </div>
+                </div>
+                <div class="chart-fixed-height">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-3 h-100">
+                <h6 data-translate="summary_order">Summary Order</h6>
+                <div class="chart-fixed-height">
+                    <canvas id="orderChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 p-3">
+        <h6 style="font-weight: 500; padding-bottom: 10px;" data-translate="recent_activity">Recent Activity</h6>
+        <table class="table">
+            <thead class="table-light">
+                <tr>
+                    <th data-translate="order_id">Order ID</th>
+                    <th data-translate="user">User</th>
+                    <th data-translate="faculty">Faculty</th>
+                    <th data-translate="status">Status</th>
+                    <th data-translate="actions">Actions</th>
+                    <th data-translate="shipped">Shipped</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.RecentOrders != null && ViewBag.RecentOrders.Count > 0)
+                {
+                    @foreach (var order in ViewBag.RecentOrders)
+                    {
+                        <tr>
+                            <td>#ORD-@order.Id</td>
+                            <td>
+                                <img style="width:50px;height: 50px; border-radius:50%;" src="@(string.IsNullOrEmpty(order.User.ProfileImageUrl) ? "/img/default-profile.png" : order.User.ProfileImageUrl)" alt="profile">
+                                @order.User.FullName
+                            </td>
+                            <td>@order.User.Faculty.Name</td>
+                            <td><span class="status-@order.Status.ToLower()">@order.Status</span></td>
+                            <td>
+                                @if (order.Status == "Pending")
+                                {
+                                    <a href="#" class="mark-shipped" data-order-id="@order.Id">
+                                        <span style="color:rgb(40, 245, 4); font-weight: 500;" data-translate="mark_as_shipped">Mark as Shipped</span>
+                                    </a>
+                                    <span data-translate="-"> - </span>
+                                }
+                                <a href="#" class="view-order" data-order-id="@order.Id" data-translate="view_details">View Details</a>
+                            </td>
+                            <td>
+                                @if (order.Status == "Shipped")
+                                {
+                                    <i class="bi bi-check-lg text-success"></i>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center" data-translate="no_recent_orders_found">No recent orders found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize charts when the document is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            initSalesChart();
+            initOrderChart();
+        });
+
+        function initSalesChart() {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            window.salesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Sales',
+                        data: [12, 19, 3, 5, 2, 3],
+                        borderColor: '#0d6efd',
+                        tension: 0.1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function updateSalesChart(period) {
+            // Simulate data update based on period
+            const data = period === 'today' 
+                ? [5, 10, 15, 20, 25, 30]
+                : [30, 25, 20, 15, 10, 5];
+            
+            window.salesChart.data.datasets[0].data = data;
+            window.salesChart.update();
+        }
+
+        function initOrderChart() {
+            const ctx = document.getElementById('orderChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'Shipped', 'Delivered', 'Cancelled'],
+                    datasets: [{
+                        data: [12, 19, 3, 5],
+                        backgroundColor: [
+                            '#ffc107',
+                            '#0d6efd',
+                            '#198754',
+                            '#dc3545'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+    </script>
+}

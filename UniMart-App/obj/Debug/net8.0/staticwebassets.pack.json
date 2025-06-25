@@ -1,0 +1,717 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\UniMart-App.bundle.scp.css",
+      "PackagePath": "staticwebassets\\UniMart-App.m643apybm5.bundle.scp.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\Login.css",
+      "PackagePath": "staticwebassets\\css\\Login.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\SignUp.css",
+      "PackagePath": "staticwebassets\\css\\SignUp.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\bootstrap.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\dark-mode.css",
+      "PackagePath": "staticwebassets\\css\\dark-mode.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\dashboard.css",
+      "PackagePath": "staticwebassets\\css\\dashboard.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\fontawesome-complete.css",
+      "PackagePath": "staticwebassets\\css\\fontawesome-complete.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\forgotPassword.css",
+      "PackagePath": "staticwebassets\\css\\forgotPassword.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\front-end\\Cards.css",
+      "PackagePath": "staticwebassets\\css\\front-end\\Cards.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\front-end\\Cart.css",
+      "PackagePath": "staticwebassets\\css\\front-end\\Cart.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\front-end\\Catalog.css",
+      "PackagePath": "staticwebassets\\css\\front-end\\Catalog.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\front-end\\Contact.css",
+      "PackagePath": "staticwebassets\\css\\front-end\\Contact.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\front-end\\HomePage.css",
+      "PackagePath": "staticwebassets\\css\\front-end\\HomePage.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\front-end\\HomePagebeforeLogin.css",
+      "PackagePath": "staticwebassets\\css\\front-end\\HomePagebeforeLogin.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\front-end\\Notifications.css",
+      "PackagePath": "staticwebassets\\css\\front-end\\Notifications.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\front-end\\ProductDetails.css",
+      "PackagePath": "staticwebassets\\css\\front-end\\ProductDetails.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\front-end\\ProductList.css",
+      "PackagePath": "staticwebassets\\css\\front-end\\ProductList.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\front-end\\Profile.css",
+      "PackagePath": "staticwebassets\\css\\front-end\\Profile.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\front-end\\RelatedProducts.css",
+      "PackagePath": "staticwebassets\\css\\front-end\\RelatedProducts.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\front-end\\Settings.css",
+      "PackagePath": "staticwebassets\\css\\front-end\\Settings.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\front-end\\TrendingProducts.css",
+      "PackagePath": "staticwebassets\\css\\front-end\\TrendingProducts.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\site-icon-fix-enhanced.css",
+      "PackagePath": "staticwebassets\\css\\site-icon-fix-enhanced.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\site-icon-fix.css",
+      "PackagePath": "staticwebassets\\css\\site-icon-fix.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\css\\transitions.css",
+      "PackagePath": "staticwebassets\\css\\transitions.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\contact-support\\UNIMART.png",
+      "PackagePath": "staticwebassets\\img\\contact-support\\UNIMART.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\contact-support\\a2rjWFyUR5e97d6vt4t-xQ@1580850656 1.png",
+      "PackagePath": "staticwebassets\\img\\contact-support\\a2rjWFyUR5e97d6vt4t-xQ@1580850656 1.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\contact-support\\fargle.jpg",
+      "PackagePath": "staticwebassets\\img\\contact-support\\fargle.jpg"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\contact-support\\img-1.png",
+      "PackagePath": "staticwebassets\\img\\contact-support\\img-1.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\contact-support\\img-2.png",
+      "PackagePath": "staticwebassets\\img\\contact-support\\img-2.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\contact-support\\img-3.png",
+      "PackagePath": "staticwebassets\\img\\contact-support\\img-3.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\contact-support\\img.png",
+      "PackagePath": "staticwebassets\\img\\contact-support\\img.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\contact-support\\rabie.jpg",
+      "PackagePath": "staticwebassets\\img\\contact-support\\rabie.jpg"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\contact-support\\samy.jpg",
+      "PackagePath": "staticwebassets\\img\\contact-support\\samy.jpg"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\default-profile.png",
+      "PackagePath": "staticwebassets\\img\\default-profile.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page-before-login\\UNIMART.png",
+      "PackagePath": "staticwebassets\\img\\home-page-before-login\\UNIMART.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page-before-login\\a2rjWFyUR5e97d6vt4t-xQ@1580850656 1.png",
+      "PackagePath": "staticwebassets\\img\\home-page-before-login\\a2rjWFyUR5e97d6vt4t-xQ@1580850656 1.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page-before-login\\img-1.png",
+      "PackagePath": "staticwebassets\\img\\home-page-before-login\\img-1.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page-before-login\\img-2.png",
+      "PackagePath": "staticwebassets\\img\\home-page-before-login\\img-2.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page-before-login\\img-3.png",
+      "PackagePath": "staticwebassets\\img\\home-page-before-login\\img-3.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page-before-login\\img-4.png",
+      "PackagePath": "staticwebassets\\img\\home-page-before-login\\img-4.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page-before-login\\img.png",
+      "PackagePath": "staticwebassets\\img\\home-page-before-login\\img.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page\\UNIMART.png",
+      "PackagePath": "staticwebassets\\img\\home-page\\UNIMART.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page\\a2rjWFyUR5e97d6vt4t-xQ@1580850656 1.png",
+      "PackagePath": "staticwebassets\\img\\home-page\\a2rjWFyUR5e97d6vt4t-xQ@1580850656 1.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page\\img-1.png",
+      "PackagePath": "staticwebassets\\img\\home-page\\img-1.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page\\img-2.png",
+      "PackagePath": "staticwebassets\\img\\home-page\\img-2.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page\\img-3.png",
+      "PackagePath": "staticwebassets\\img\\home-page\\img-3.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page\\img-4.png",
+      "PackagePath": "staticwebassets\\img\\home-page\\img-4.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\home-page\\img.png",
+      "PackagePath": "staticwebassets\\img\\home-page\\img.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\img-1.png",
+      "PackagePath": "staticwebassets\\img\\img-1.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\img.png",
+      "PackagePath": "staticwebassets\\img\\img.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\login\\UNIMART.png",
+      "PackagePath": "staticwebassets\\img\\login\\UNIMART.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\login\\img.png",
+      "PackagePath": "staticwebassets\\img\\login\\img.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-details\\UNIMART.png",
+      "PackagePath": "staticwebassets\\img\\product-details\\UNIMART.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-details\\img-1.png",
+      "PackagePath": "staticwebassets\\img\\product-details\\img-1.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-details\\img-2.png",
+      "PackagePath": "staticwebassets\\img\\product-details\\img-2.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-details\\img-3.png",
+      "PackagePath": "staticwebassets\\img\\product-details\\img-3.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-details\\img-4.png",
+      "PackagePath": "staticwebassets\\img\\product-details\\img-4.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-details\\img-5.png",
+      "PackagePath": "staticwebassets\\img\\product-details\\img-5.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-details\\img-6.png",
+      "PackagePath": "staticwebassets\\img\\product-details\\img-6.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-details\\img-7.png",
+      "PackagePath": "staticwebassets\\img\\product-details\\img-7.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-details\\img.png",
+      "PackagePath": "staticwebassets\\img\\product-details\\img.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-details\\logo.png",
+      "PackagePath": "staticwebassets\\img\\product-details\\logo.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-list\\UNIMART.png",
+      "PackagePath": "staticwebassets\\img\\product-list\\UNIMART.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-list\\a2rjWFyUR5e97d6vt4t-xQ@1580850656 1.png",
+      "PackagePath": "staticwebassets\\img\\product-list\\a2rjWFyUR5e97d6vt4t-xQ@1580850656 1.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-list\\img-1.png",
+      "PackagePath": "staticwebassets\\img\\product-list\\img-1.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-list\\img-2.png",
+      "PackagePath": "staticwebassets\\img\\product-list\\img-2.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-list\\img-3.png",
+      "PackagePath": "staticwebassets\\img\\product-list\\img-3.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-list\\img-4.png",
+      "PackagePath": "staticwebassets\\img\\product-list\\img-4.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-list\\img-5.png",
+      "PackagePath": "staticwebassets\\img\\product-list\\img-5.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-list\\img-6.png",
+      "PackagePath": "staticwebassets\\img\\product-list\\img-6.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-list\\img-7.png",
+      "PackagePath": "staticwebassets\\img\\product-list\\img-7.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-list\\img-8.png",
+      "PackagePath": "staticwebassets\\img\\product-list\\img-8.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\product-list\\img.png",
+      "PackagePath": "staticwebassets\\img\\product-list\\img.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\profile\\0d773f84-c306-4040-8256-b5573b7b53c8.jpg",
+      "PackagePath": "staticwebassets\\img\\profile\\0d773f84-c306-4040-8256-b5573b7b53c8.jpg"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\profile\\75f67491-e5d7-421a-b353-a2f7d1ac31be.jpg",
+      "PackagePath": "staticwebassets\\img\\profile\\75f67491-e5d7-421a-b353-a2f7d1ac31be.jpg"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\profile\\Studying in Library.jpeg",
+      "PackagePath": "staticwebassets\\img\\profile\\Studying in Library.jpeg"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\profile\\library studying.jpeg",
+      "PackagePath": "staticwebassets\\img\\profile\\library studying.jpeg"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\img\\profile\\logo.png",
+      "PackagePath": "staticwebassets\\img\\profile\\logo.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\js\\Login.js",
+      "PackagePath": "staticwebassets\\js\\Login.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\js\\Sign.js",
+      "PackagePath": "staticwebassets\\js\\Sign.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\js\\bootstrap.js",
+      "PackagePath": "staticwebassets\\js\\bootstrap.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\js\\darkMode.js",
+      "PackagePath": "staticwebassets\\js\\darkMode.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\js\\forgotPassword.js",
+      "PackagePath": "staticwebassets\\js\\forgotPassword.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\js\\front-end\\HomePagebeforeLogin.js",
+      "PackagePath": "staticwebassets\\js\\front-end\\HomePagebeforeLogin.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\js\\front-end\\search.js",
+      "PackagePath": "staticwebassets\\js\\front-end\\search.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\js\\jquery-3.7.1.min.js",
+      "PackagePath": "staticwebassets\\js\\jquery-3.7.1.min.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\js\\language.js",
+      "PackagePath": "staticwebassets\\js\\language.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\js\\popper.min.js",
+      "PackagePath": "staticwebassets\\js\\popper.min.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\js\\resetPassword.js",
+      "PackagePath": "staticwebassets\\js\\resetPassword.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap-icons\\font\\bootstrap-icons.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap-icons\\font\\bootstrap-icons.min.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap-icons\\font\\fonts\\README.txt",
+      "PackagePath": "staticwebassets\\lib\\bootstrap-icons\\font\\fonts\\README.txt"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap-icons\\font\\fonts\\bootstrap-icons.woff",
+      "PackagePath": "staticwebassets\\lib\\bootstrap-icons\\font\\fonts\\bootstrap-icons.woff"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap-icons\\font\\fonts\\bootstrap-icons.woff2",
+      "PackagePath": "staticwebassets\\lib\\bootstrap-icons\\font\\fonts\\bootstrap-icons.woff2"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "PackagePath": "staticwebassets\\lib\\bootstrap"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\fontawesome\\css\\all.min.css",
+      "PackagePath": "staticwebassets\\lib\\fontawesome\\css\\all.min.css"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\fontawesome\\webfonts\\README.txt",
+      "PackagePath": "staticwebassets\\lib\\fontawesome\\webfonts\\README.txt"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\fontawesome\\webfonts\\fa-brands-400.woff2",
+      "PackagePath": "staticwebassets\\lib\\fontawesome\\webfonts\\fa-brands-400.woff2"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\fontawesome\\webfonts\\fa-regular-400.woff2",
+      "PackagePath": "staticwebassets\\lib\\fontawesome\\webfonts\\fa-regular-400.woff2"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\fontawesome\\webfonts\\fa-solid-900.woff2",
+      "PackagePath": "staticwebassets\\lib\\fontawesome\\webfonts\\fa-solid-900.woff2"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\0a074828-65d0-4807-b1b1-d758133d1071.webp",
+      "PackagePath": "staticwebassets\\product_images\\0a074828-65d0-4807-b1b1-d758133d1071.webp"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\6668e545-fa2f-4c50-a451-629d8c056b03.webp",
+      "PackagePath": "staticwebassets\\product_images\\6668e545-fa2f-4c50-a451-629d8c056b03.webp"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\6a4ed00a-4c6d-490d-a770-9b6ca798b851.png",
+      "PackagePath": "staticwebassets\\product_images\\6a4ed00a-4c6d-490d-a770-9b6ca798b851.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\78015ecb-e32c-475c-9a88-adb6f0dc23e1.webp",
+      "PackagePath": "staticwebassets\\product_images\\78015ecb-e32c-475c-9a88-adb6f0dc23e1.webp"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\80315e9a-44a7-4c6d-81f2-726276844f83.webp",
+      "PackagePath": "staticwebassets\\product_images\\80315e9a-44a7-4c6d-81f2-726276844f83.webp"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\87fb2f15-0ea2-4643-9965-95390bb53725.webp",
+      "PackagePath": "staticwebassets\\product_images\\87fb2f15-0ea2-4643-9965-95390bb53725.webp"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\8eee52ab-8d2e-478d-ae4d-3aac44abd381.jpg",
+      "PackagePath": "staticwebassets\\product_images\\8eee52ab-8d2e-478d-ae4d-3aac44abd381.jpg"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\99436170-8e3c-4c02-96e2-3551af91269e.png",
+      "PackagePath": "staticwebassets\\product_images\\99436170-8e3c-4c02-96e2-3551af91269e.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\9c511437-0e7e-40e4-818d-64e04d1b0c8a.webp",
+      "PackagePath": "staticwebassets\\product_images\\9c511437-0e7e-40e4-818d-64e04d1b0c8a.webp"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\b5e45f1f-1f98-4fe4-b9ea-328c7ea08611.webp",
+      "PackagePath": "staticwebassets\\product_images\\b5e45f1f-1f98-4fe4-b9ea-328c7ea08611.webp"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\b80fa507-03d0-4f79-b3b6-36c841ddbe57.webp",
+      "PackagePath": "staticwebassets\\product_images\\b80fa507-03d0-4f79-b3b6-36c841ddbe57.webp"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\b81f6531-7be1-4ae7-a14c-4fab50a83e05.webp",
+      "PackagePath": "staticwebassets\\product_images\\b81f6531-7be1-4ae7-a14c-4fab50a83e05.webp"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\c5cceb5a-40f8-4dc7-8937-968cb0e748e9.png",
+      "PackagePath": "staticwebassets\\product_images\\c5cceb5a-40f8-4dc7-8937-968cb0e748e9.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\cbe8cfd1-7df6-42b7-9bd7-3041da9b53b8.webp",
+      "PackagePath": "staticwebassets\\product_images\\cbe8cfd1-7df6-42b7-9bd7-3041da9b53b8.webp"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\e74920d8-7fcd-4ce6-9220-9c3d126a2c49.png",
+      "PackagePath": "staticwebassets\\product_images\\e74920d8-7fcd-4ce6-9220-9c3d126a2c49.png"
+    },
+    {
+      "Id": "D:\\UniMart\\Final\\UniMart\\UniMart-App\\wwwroot\\product_images\\ebf04b2a-004e-42e7-a4b7-3501feedc5f0.webp",
+      "PackagePath": "staticwebassets\\product_images\\ebf04b2a-004e-42e7-a4b7-3501feedc5f0.webp"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.UniMart-App.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.UniMart-App.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.UniMart-App.props",
+      "PackagePath": "build\\UniMart-App.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.UniMart-App.props",
+      "PackagePath": "buildMultiTargeting\\UniMart-App.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.UniMart-App.props",
+      "PackagePath": "buildTransitive\\UniMart-App.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

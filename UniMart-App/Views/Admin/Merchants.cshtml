@@ -1,0 +1,323 @@
+@using UniMart_App.ViewModels
+@model IEnumerable<MerchantViewModel>
+@{
+    ViewData["Title"] = "Merchant Management";
+    Layout = "_DashboardLayout";
+}
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0" data-translate="merchant_management">Merchant Management</h2>
+            <p class="text-muted" data-translate="monitor_and_manage_merchant_accounts">Monitor and manage merchant accounts</p>
+        </div>
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="statusFilter" id="all" value="all" checked>
+            <label class="btn btn-outline-primary" for="all" data-translate="all_merchants">All Merchants</label>
+            
+            <input type="radio" class="btn-check" name="statusFilter" id="active" value="active">
+            <label class="btn btn-outline-success" for="active" data-translate="active">Active</label>
+            
+            <input type="radio" class="btn-check" name="statusFilter" id="suspended" value="suspended">
+            <label class="btn btn-outline-warning" for="suspended" data-translate="suspended">Suspended</label>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Merchants Grid -->
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var merchant in Model)
+            {
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card shadow h-100 merchant-card" data-status="@(merchant.User.IsSuspended ? "suspended" : "active")">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">@merchant.User.FullName</h6>
+                                @if (merchant.User.IsSuspended)
+                                {
+                                    <span class="badge bg-warning" data-translate="suspended">Suspended</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success" data-translate="active">Active</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="d-flex align-items-center mb-2">
+                                        @if (!string.IsNullOrEmpty(merchant.User.ProfileImageUrl))
+                                        {
+                                            <img src="@merchant.User.ProfileImageUrl" alt="@merchant.User.FullName" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-primary rounded-circle me-3 d-flex align-items-center justify-content-center text-white" style="width: 50px; height: 50px;">
+                                                @merchant.User.FullName.Substring(0, 1).ToUpper()
+                                            </div>
+                                        }
+                                        <div>
+                                            <strong>@merchant.User.Email</strong><br>
+                                            <small class="text-muted">@merchant.User.Faculty?.Name</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Merchant Statistics -->
+                            <div class="row text-center mb-3">
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <h5 class="text-primary mb-0">@merchant.Performance.ProductCount</h5>
+                                        <small class="text-muted" data-translate="products">Products</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <h5 class="text-success mb-0">@merchant.Performance.OrderCount</h5>
+                                        <small class="text-muted" data-translate="orders">Orders</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <h5 class="text-info mb-0">@merchant.Performance.Rating.ToString("0.0")</h5>
+                                    <small class="text-muted" data-translate="rating">Rating</small>
+                                </div>
+                            </div>
+
+                            <!-- Contact Information -->
+                            @if (!string.IsNullOrEmpty(merchant.User.Address))
+                            {
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        <i class="bi bi-geo-alt"></i> 
+                                        @merchant.User.Address
+                                        @if (!string.IsNullOrEmpty(merchant.User.City))
+                                        {
+                                            <text>, @merchant.User.City</text>
+                                        }
+                                    </small>
+                                </div>
+                            }
+
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar"></i> 
+                                    Joined @merchant.User.EmailConfirmed.ToString()
+                                </small>
+                            </div>
+
+                            <!-- Performance Indicators -->
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <small data-translate="performance_score">Performance Score</small>
+                                    <small>@merchant.Performance.PerformanceScore%</small>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-success" style="width: @merchant.Performance.PerformanceScore%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <!-- Merchant Actions -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <a href="#" class="btn btn-sm btn-outline-primary" 
+                                           data-bs-toggle="modal" 
+                                           data-bs-target="#merchantDetailsModal" 
+                                           data-merchant-id="@merchant.User.Id">
+                                            <i class="bi bi-info-circle"></i> Details
+                                        </a>
+                                                        
+                                        @if (merchant.User.IsSuspended)
+                                        {
+                                            <form asp-action="ApproveMerchant" method="post" style="display: inline;">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="userId" value="@merchant.User.Id" />
+                                                <button type="submit" class="btn btn-sm btn-success">
+                                                    <i class="bi bi-check-circle"></i> Approve
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form asp-action="SuspendMerchant" method="post" style="display: inline;">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="userId" value="@merchant.User.Id" />
+                                                <button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('Are you sure you want to suspend this merchant? All their products will be deactivated.')">
+                                                    <i class="bi bi-pause-circle"></i> Suspend
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-shop text-muted" style="font-size: 4rem;"></i>
+            <h4 class="mt-3 text-muted" data-translate="no_merchants_found">No Merchants Found</h4>
+            <p class="text-muted" data-translate="merchant_accounts_will_appear_here_as_they_register">Merchant accounts will appear here as they register.</p>
+        </div>
+    }
+</div>
+
+<!-- View Merchant Modal -->
+<div class="modal fade" id="merchantDetailsModal" tabindex="-1" aria-labelledby="merchantDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="merchantDetailsModalLabel" data-translate="merchant_details">Merchant Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="merchantDetails">
+                    <!-- Merchant details will be loaded here -->
+                    <div class="text-center py-3">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden" data-translate="loading">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-translate="close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel" data-translate="confirm_delete">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete merchant account "<span id="userName"></span>"? This will also remove all their products and cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-translate="cancel">Cancel</button>
+                <form asp-action="Delete" method="post" id="deleteForm">
+                    <input type="hidden" name="id" id="userId" />
+                    <button type="submit" class="btn btn-danger" data-translate="delete_account">Delete Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Status filter handling
+            $('input[name="statusFilter"]').change(function() {
+                var selectedStatus = $(this).val();
+                
+                if (selectedStatus === 'all') {
+                    $('.merchant-card').show();
+                } else {
+                    // Hide all cards first
+                    $('.merchant-card').hide();
+                    // Show cards matching the selected status
+                    if (selectedStatus === 'active') {
+                        $('.merchant-card[data-status="active"]').show();
+                    } else if (selectedStatus === 'suspended') {
+                        $('.merchant-card[data-status="suspended"]').show();
+                    }
+                }
+            });
+
+            // Modal details loading
+            $('#merchantDetailsModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var merchantId = button.data('merchant-id');
+                var modal = $(this);
+                
+                // Show loading spinner
+                modal.find('#merchantDetails').html('<div class="text-center py-3"><div class="spinner-border" role="status"><span class="visually-hidden" data-translate="loading">Loading...</span></div></div>');
+                
+                // Load merchant details via AJAX
+                $.get('/Admin/GetMerchantDetails?id=' + merchantId, function(data) {
+                    modal.find('#merchantDetails').html(data);
+                }).fail(function() {
+                    modal.find('#merchantDetails').html('<div class="alert alert-danger">Error loading merchant details. Please try again.</div>');
+                });
+            });
+        });
+    </script>
+}
+
+@section Styles {
+    <style>
+        .merchant-card {
+            transition: transform 0.2s ease-in-out;
+            position: relative;
+        }
+        .merchant-card:hover {
+            transform: translateY(-5px);
+        }
+        .settings-dropdown-container {
+            position: relative !important;
+        }
+        .settings-dropdown {
+            position: absolute;
+            z-index: 1050 !important;
+            top: 100% !important;
+            right: 0 !important;
+            left: auto !important;
+            transform: none !important;
+            margin-top: 2px !important;
+            min-width: 180px;
+        }
+        /* Prevent card hover effect while dropdown is open */
+        .merchant-card:has(.show) {
+            transform: none;
+        }
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .dropdown-item:active {
+            background-color: var(--bs-primary);
+        }
+        @@media (max-width: 767px) {
+            .dropdown-item {
+                padding: 1rem 1.25rem;
+                font-size: 1rem;
+            }
+            .settings-dropdown {
+                width: auto;
+                min-width: 200px;
+            }
+        }
+        .btn-check:checked + .btn {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+            color: white;
+        }
+    </style>
+}
+

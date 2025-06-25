@@ -1,0 +1,145 @@
+@{
+    ViewData["Title"] = "Revenue";
+    Layout = "_DashboardLayout";
+    decimal merchantFeePercentage = ViewBag.MerchantFeePercentage ?? 5;
+}
+
+<div class="container py-4">
+    <h2 class="mb-4" data-translate="revenue_overview">Revenue Overview</h2>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4>Total Revenue: <span class="text-success">EGP @((ViewBag.TotalRevenue ?? 0M).ToString("N2"))</span></h4>
+            <p class="mb-0">Platform Fee: <strong>@merchantFeePercentage%</strong> (deducted from each order)</p>
+            @{
+                decimal totalRevenue = ViewBag.TotalRevenue ?? 0M;
+                decimal netRevenue = totalRevenue * (1 - merchantFeePercentage / 100M);
+            }
+            <h5 class="mt-2">Net Revenue After Fee: <span class="text-primary">EGP @netRevenue.ToString("N2")</span></h5>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0" data-translate="revenue_last_30_days">Revenue (Last 30 Days)</h5>
+        </div>
+        <div class="card-body">
+            <canvas id="revenueChart" height="80"></canvas>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0" data-translate="recent_orders">Recent Orders</h5>
+            <a href="@Url.Action("ExportOrdersToExcel", "Merchant")" class="btn btn-success btn-sm">
+                <i class="bi bi-file-earmark-excel"></i> Export to Excel
+            </a>
+        </div>
+        <div class="card-body p-0">
+            <table class="table mb-0" id="ordersTable">
+                <thead>
+                    <tr>
+                        <th data-translate="order_id">Order ID</th>
+                        <th data-translate="date">Date</th>
+                        <th data-translate="items">Items</th>
+                        <th data-translate="total">Total</th>
+                        <th data-translate="platform_fee">Platform Fee</th>
+                        <th data-translate="net_revenue">Net Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @if (ViewBag.RecentOrders != null && ViewBag.RecentOrders.Count > 0)
+                {
+                    foreach (var order in ViewBag.RecentOrders)
+                    {
+                        decimal orderTotal = 0;
+                        foreach (var item in order.OrderItems)
+                        {
+                            orderTotal += item.Quantity * item.Price;
+                        }
+                        decimal platformFee = orderTotal * merchantFeePercentage / 100M;
+                        decimal orderNetRevenue = orderTotal - platformFee;
+                        <tr class="order-row" style="cursor:pointer;" data-date="@order.OrderDate.ToString("yyyy-MM-dd")" data-revenue="@orderTotal">
+                            <td>@order.Id</td>
+                            <td>@order.OrderDate.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@order.OrderItems.Count</td>
+                            <td>EGP @orderTotal.ToString("N2")</td>
+                            <td>EGP @platformFee.ToString("N2")</td>
+                            <td>EGP @orderNetRevenue.ToString("N2")</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="6" class="text-center" data-translate="no_recent_orders_found">No recent orders found.</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .order-card {
+            transition: all 0.3s ease;
+        }
+        .order-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+        }
+        .btn-check:checked + .btn {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+            color: white;
+        }
+        .order-row:hover {
+            background-color: #f1f1f1;
+        }
+        .order-row.selected {
+            background-color: #d1ecf1;
+        }
+    </style>
+}
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let chartInstance;
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        const chartLabels = @Json.Serialize(ViewBag.ChartLabels ?? new string[0]);
+        const chartData = @Json.Serialize(ViewBag.ChartData ?? new decimal[0]);
+        chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartLabels,
+                datasets: [{
+                    label: 'Revenue (EGP)',
+                    data: chartData,
+                    borderColor: '#36b9cc',
+                    backgroundColor: 'rgba(54,185,204,0.1)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Row click event to update chart
+        document.querySelectorAll('.order-row').forEach(row => {
+            row.addEventListener('click', function() {
+                document.querySelectorAll('.order-row').forEach(r => r.classList.remove('selected'));
+                this.classList.add('selected');
+                const date = this.getAttribute('data-date');
+                const revenue = this.getAttribute('data-revenue');
+                chartInstance.data.labels = [date];
+                chartInstance.data.datasets[0].data = [revenue];
+                chartInstance.update();
+            });
+        });
+    </script>
+}

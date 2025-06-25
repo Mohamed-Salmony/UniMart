@@ -1,0 +1,564 @@
+@{
+    ViewData["Title"] = "Platform Analytics";
+    Layout = "_DashboardLayout";
+}
+
+<style>
+    .overview-card {
+        cursor: pointer;
+        transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .overview-card:hover, .overview-card.selected {
+        box-shadow: 0 0 0 0.2rem #007bff33;
+        border: 2px solid #007bff;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0" data-translate="platform_analytics">Platform Analytics</h2>
+            <p class="text-muted" data-translate="monitor_overall_platform_performance_and_insights">Monitor overall platform performance and insights</p>
+        </div>
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="timeRange" id="week" value="7">
+            <label class="btn btn-outline-primary" for="week" data-translate="7_days">7 Days</label>
+            
+            <input type="radio" class="btn-check" name="timeRange" id="month" value="30" checked>
+            <label class="btn btn-outline-primary" for="month" data-translate="30_days">30 Days</label>
+            
+            <input type="radio" class="btn-check" name="timeRange" id="quarter" value="90">
+            <label class="btn btn-outline-primary" for="quarter" data-translate="90_days">90 Days</label>
+        </div>
+    </div>
+
+    <!-- Overview Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-sm-6 mb-4">
+            <div class="card shadow overview-card" data-metric="revenue">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="text-muted mb-1" data-translate="total_revenue">Total Revenue</h6>
+                            <span class="h3 font-weight-bold mb-0">@ViewBag.TotalRevenue?.ToString("N2") EGP</span>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-4">
+            <div class="card shadow overview-card" data-metric="orders">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="text-muted mb-1" data-translate="total_orders">Total Orders</h6>
+                            <span class="h3 font-weight-bold mb-0">@ViewBag.TotalOrders</span>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon icon-shape bg-success text-white rounded-circle shadow">
+                                <i class="bi bi-bag"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-4">
+            <div class="card shadow overview-card" data-metric="averageOrderValue">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="text-muted mb-1" data-translate="average_order_value">Average Order Value</h6>
+                            <span class="h3 font-weight-bold mb-0">@ViewBag.AverageOrderValue?.ToString("N2") EGP</span>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon icon-shape bg-info text-white rounded-circle shadow">
+                                <i class="bi bi-cart"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-4">
+            <div class="card shadow overview-card" data-metric="growth">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="text-muted mb-1" data-translate="platform_growth">Platform Growth</h6>
+                            <span class="h3 font-weight-bold mb-0 text-success">
+                                @if (ViewBag.PlatformGrowth != null)
+                                {
+                                    var growth = (decimal)ViewBag.PlatformGrowth;
+                                    @(growth >= 0 ? "+" : "")@growth.ToString("N1")@Html.Raw("%")
+                                }
+                                else
+                                {
+                                    @:0.0%
+                                }
+                            </span>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                                <i class="bi bi-graph-up"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-4">
+            <div class="card shadow overview-card" data-metric="inventory">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="text-muted mb-1" data-translate="inventory_status">Inventory Status</h6>
+                            <div>
+                                <span class="badge bg-success me-1">In Stock: @ViewBag.InventoryStatus?.InStock?.ToString("N1")%</span><br>
+                                <span class="badge bg-warning me-1">Low: @ViewBag.InventoryStatus?.LowStock?.ToString("N1")%</span><br>
+                                <span class="badge bg-danger">Out: @ViewBag.InventoryStatus?.OutOfStock?.ToString("N1")%</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon icon-shape bg-secondary text-white rounded-circle shadow">
+                                <i class="bi bi-box-seam"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tax and Shipping Summary -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow overview-card" data-metric="tax-shipping">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" data-translate="order_tax_shipping_summary">Order Tax & Shipping Summary</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="border rounded p-3">
+                                <h6 class="text-muted" data-translate="total_tax_collected">Total Tax Collected</h6>
+                                <h4 class="text-primary">@ViewBag.TotalTaxCollected?.ToString("N2") EGP</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="border rounded p-3">
+                                <h6 class="text-muted" data-translate="total_shipping_costs_collected">Total Shipping Costs Collected</h6>
+                                <h4 class="text-success">@ViewBag.TotalShippingCollected?.ToString("N2") EGP</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Chart -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0" data-translate="platform_sales_overview">Platform Sales Overview</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="salesChart" width="400" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Faculty Sales Bio Chart -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0" data-translate="faculty_sales_overview">Faculty Sales Overview</h5>
+                </div>
+                <div class="card-body position-relative">
+                    <canvas id="facultySalesChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Move hoverboard outside so it overlays the page and doesn't affect chart size -->
+    <div id="faculty-hoverboard" style="display:none;position:fixed;z-index:9999;background:#fff;border:1px solid #ddd;box-shadow:0 2px 8px rgba(0,0,0,0.15);padding:16px;border-radius:8px;min-width:220px;pointer-events:none;"></div>
+
+    <!-- Performance Metrics -->
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0" data-translate="top_selling_products">Top Selling Products</h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.TopProducts != null)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th data-translate="product">Product</th>
+                                        <th data-translate="sold">Sold</th>
+                                        <th data-translate="revenue">Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewBag.TopProducts)
+                                    {
+                                        var images = item.Product.ProductImages as IEnumerable<UniMart_App.Models.ProductImage>;
+                                        var firstImageUrl = images != null && images.Any() ? images.First().ImageUrl : "/img/default-profile.png";
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <img src="@firstImageUrl" alt="@item.Product.Name" class="me-2" style="width: 30px; height: 30px; object-fit: cover; border-radius: 4px;">
+                                                    <div>
+                                                        <strong>@item.Product.Name</strong><br>
+                                                        <small class="text-muted">@item.Product.Faculty?.Name</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>@item.TotalSold</td>
+                                            <td>@item.Revenue.ToString("N2") EGP</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center py-3" data-translate="no_sales_data_available_yet">No sales data available yet.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0" data-translate="inventory_status">Inventory Status</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="inventoryChart" width="400" height="200"></canvas>
+                    <div class="mt-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span data-translate="in_stock">In Stock</span>
+                            <span class="badge bg-success">@ViewBag.InventoryStatus?.InStock?.ToString("N1")%</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span data-translate="low_stock">Low Stock</span>
+                            <span class="badge bg-warning">@ViewBag.InventoryStatus?.LowStock?.ToString("N1")%</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span data-translate="out_of_stock">Out of Stock</span>
+                            <span class="badge bg-danger">@ViewBag.InventoryStatus?.OutOfStock?.ToString("N1")%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sales Chart
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            const salesData = @Html.Raw(Json.Serialize(ViewBag.SalesData ?? new object[0]));
+            const avgOrderValue = @ViewBag.AverageOrderValue ?? 0;
+            const growth = 15.3; // Replace with dynamic value if available
+            // Add tax and shipping data for chart
+            const totalTax = @ViewBag.TotalTaxCollected ?? 0;
+            const totalShipping = @ViewBag.TotalShippingCollected ?? 0;
+            // For demo, spread total tax/shipping equally across days (replace with per-day if available)
+            const days = salesData.length > 0 ? salesData.length : 1;
+            const taxData = Array(days).fill(totalTax / days);
+            const shippingData = Array(days).fill(totalShipping / days);
+
+            const chartDatasets = [
+                {
+                    label: 'Revenue',
+                    data: salesData.map(d => d.revenue),
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                    tension: 0.1,
+                    fill: true,
+                    yAxisID: 'y',
+                },
+                {
+                    label: 'Orders',
+                    data: salesData.map(d => d.orders),
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    tension: 0.1,
+                    yAxisID: 'y1',
+                },
+                {
+                    label: 'Average Order Value',
+                    data: salesData.map(() => avgOrderValue),
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                    borderDash: [5, 5],
+                    tension: 0.1,
+                    yAxisID: 'y',
+                    hidden: true
+                },
+                {
+                    label: 'Platform Growth',
+                    data: salesData.map(() => growth),
+                    borderColor: 'rgb(255, 205, 86)',
+                    backgroundColor: 'rgba(255, 205, 86, 0.1)',
+                    borderDash: [2, 2],
+                    tension: 0.1,
+                    yAxisID: 'y',
+                    hidden: true
+                },
+                // Add tax and shipping datasets
+                {
+                    label: 'Tax Collected',
+                    data: taxData,
+                    borderColor: '#6f42c1',
+                    backgroundColor: 'rgba(111, 66, 193, 0.1)',
+                    borderDash: [6, 2],
+                    tension: 0.1,
+                    yAxisID: 'y',
+                    hidden: true
+                },
+                {
+                    label: 'Shipping Collected',
+                    data: shippingData,
+                    borderColor: '#fd7e14',
+                    backgroundColor: 'rgba(253, 126, 20, 0.1)',
+                    borderDash: [6, 2],
+                    tension: 0.1,
+                    yAxisID: 'y',
+                    hidden: true
+                }
+            ];
+
+            const inventoryCtx = document.getElementById('inventoryChart').getContext('2d');
+            const inventoryStatus = @Html.Raw(Json.Serialize(ViewBag.InventoryStatus ?? new { InStock = 0, LowStock = 0, OutOfStock = 0 }));
+            const inventoryDatasets = [
+                {
+                    label: 'In Stock (%)',
+                    data: salesData.map(() => inventoryStatus.inStock),
+                    borderColor: '#2dce89',
+                    backgroundColor: 'rgba(45, 206, 137, 0.1)',
+                    borderDash: [4, 2],
+                    tension: 0.1,
+                    yAxisID: 'y',
+                    hidden: true
+                },
+                {
+                    label: 'Low Stock (%)',
+                    data: salesData.map(() => inventoryStatus.lowStock),
+                    borderColor: '#fb6340',
+                    backgroundColor: 'rgba(251, 99, 64, 0.1)',
+                    borderDash: [4, 2],
+                    tension: 0.1,
+                    yAxisID: 'y',
+                    hidden: true
+                },
+                {
+                    label: 'Out of Stock (%)',
+                    data: salesData.map(() => inventoryStatus.outOfStock),
+                    borderColor: '#f5365c',
+                    backgroundColor: 'rgba(245, 54, 92, 0.1)',
+                    borderDash: [4, 2],
+                    tension: 0.1,
+                    yAxisID: 'y',
+                    hidden: true
+                }
+            ];
+            chartDatasets.push(...inventoryDatasets);
+
+            // Create the Platform Sales Overview chart (salesChart)
+            const salesChart = new Chart(salesCtx, {
+                type: 'line',
+                data: {
+                    labels: salesData.map(d => d.date || d.Date || ''), // Use your date property
+                    datasets: chartDatasets
+                },
+                options: {
+                    responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    stacked: false,
+                    plugins: {
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'Revenue / Value' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'Orders' }
+                        }
+                    }
+                }
+            });
+
+            // Faculty Sales Chart and Hoverboard
+            const facultySales = @Html.Raw(Json.Serialize(ViewBag.FacultySales ?? new object[0]));
+            const facultyLabels = facultySales.map(f => f.facultyName || f.FacultyName);
+            const facultyRevenue = facultySales.map(f => f.totalRevenue ?? f.TotalRevenue);
+
+            const facultySalesCtx = document.getElementById('facultySalesChart').getContext('2d');
+            const facultySalesChart = new Chart(facultySalesCtx, {
+                type: 'bar',
+                data: {
+                    labels: facultyLabels,
+                    datasets: [{
+                        label: 'Total Revenue',
+                        data: facultyRevenue,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
+                    onHover: (event, chartElement) => {
+                        const hoverboard = document.getElementById('faculty-hoverboard');
+                        if (chartElement.length > 0) {
+                            const idx = chartElement[0].index;
+                            const faculty = facultySales[idx];
+                            let html = `<strong>${faculty.facultyName || faculty.FacultyName}</strong><br><u>Best Sellers:</u><ul style=\"padding-left:18px;\">`;
+                            const bestSellers = faculty.bestSellers || faculty.BestSellers;
+                            if (bestSellers && bestSellers.length > 0) {
+                                bestSellers.forEach(p => {
+                                    html += `<li>
+                                        <img src=\"${p.imageUrl || p.ImageUrl || '/img/default-profile.png'}\" style=\"width:22px;height:22px;object-fit:cover;border-radius:3px;margin-right:6px;\">
+                                        <strong>${p.productName || p.ProductName}</strong> (${p.sold ?? p.Sold} sold, ${(p.revenue ?? p.Revenue).toLocaleString()} EGP)
+                                    </li>`;
+                                });
+                            } else {
+                                html += "<li data-translate="no_sales_yet">No sales yet.</li>";
+                            }
+                            html += "</ul>";
+                            hoverboard.innerHTML = html;
+                            hoverboard.style.display = 'block';
+                            // Use event.clientX/Y for fixed position, fallback to event.x/y if needed
+                            let x = event.clientX || (event.x ?? 0);
+                            let y = event.clientY || (event.y ?? 0);
+                            // Prevent hoverboard from going off the right/bottom edge
+                            const hoverboardRect = hoverboard.getBoundingClientRect();
+                            const padding = 20;
+                            if (x + hoverboardRect.width + padding > window.innerWidth) {
+                                x = window.innerWidth - hoverboardRect.width - padding;
+                            }
+                            if (y + hoverboardRect.height + padding > window.innerHeight) {
+                                y = window.innerHeight - hoverboardRect.height - padding;
+                            }
+                            hoverboard.style.left = (x + 20) + 'px';
+                            hoverboard.style.top = (y - 20) + 'px';
+                        } else {
+                            hoverboard.style.display = 'none';
+                        }
+                    }
+                }
+            });
+            // Remove extra click/mousemove handlers for hoverboard
+            document.getElementById('facultySalesChart').onmouseleave = () => {
+                document.getElementById('faculty-hoverboard').style.display = 'none';
+            };
+
+            // Inventory Status Chart
+            new Chart(inventoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['In Stock', 'Low Stock', 'Out of Stock'],
+                    datasets: [{
+                        data: [
+                            inventoryStatus.inStock,
+                            inventoryStatus.lowStock,
+                            inventoryStatus.outOfStock
+                        ],
+                        backgroundColor: [
+                            '#2dce89',  // success
+                            '#fb6340',  // warning
+                            '#f5365c'   // danger
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Time range filter
+            const timeRangeFilters = document.querySelectorAll('input[name="timeRange"]');
+            timeRangeFilters.forEach(filter => {
+                filter.addEventListener('change', function() {
+                    // Implement time range filtering - would require additional backend support
+                    window.location.href = `/Admin/Analytics?days=${this.value}`;
+                });
+            });
+
+            // Card click logic
+            const overviewCards = document.querySelectorAll('.overview-card');
+            overviewCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    overviewCards.forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    const metric = this.getAttribute('data-metric');
+                    // Hide all datasets
+                    if (typeof salesChart !== 'undefined' && salesChart.data && salesChart.data.datasets) {
+                        salesChart.data.datasets.forEach(ds => ds.hidden = true);
+                        // Show only the selected metric
+                        if (metric === 'revenue') salesChart.data.datasets[0].hidden = false;
+                        else if (metric === 'orders') salesChart.data.datasets[1].hidden = false;
+                        else if (metric === 'averageOrderValue') salesChart.data.datasets[2].hidden = false;
+                        else if (metric === 'growth') salesChart.data.datasets[3].hidden = false;
+                        else if (metric === 'tax-shipping') {
+                            salesChart.data.datasets[4].hidden = false; // Tax
+                            salesChart.data.datasets[5].hidden = false; // Shipping
+                        }
+                        else if (metric === 'inventory') {
+                            salesChart.data.datasets[6].hidden = false;
+                            salesChart.data.datasets[7].hidden = false;
+                            salesChart.data.datasets[8].hidden = false;
+                        }
+                        salesChart.update();
+                    }
+                });
+            });
+            // Select the first card by default
+            if (overviewCards.length > 0) {
+                overviewCards[0].classList.add('selected');
+            }
+            if (typeof salesChart !== 'undefined' && salesChart.data && salesChart.data.datasets) {
+                salesChart.data.datasets.forEach((ds, i) => ds.hidden = i > 1); // Show revenue/orders by default
+                salesChart.update();
+            }
+        });
+    </script>
+}

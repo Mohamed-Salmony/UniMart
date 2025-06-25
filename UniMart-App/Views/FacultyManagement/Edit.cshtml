@@ -1,0 +1,148 @@
+@model UniMart_App.Models.Faculty
+@{
+    ViewData["Title"] = "Edit Faculty";
+    Layout = "_DashboardLayout";
+}
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0" data-translate="edit_faculty">Edit Faculty</h2>
+            <p class="text-muted" data-translate="update_faculty_information">Update faculty information</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Faculties
+        </a>
+    </div>
+
+    <!-- Faculty Form -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0" data-translate="faculty_information">Faculty Information</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="Id" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label" data-translate="faculty_name">Faculty Name *</label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter faculty name" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label" data-translate="description">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe the faculty..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label" data-translate="faculty_image">Faculty Image</label>
+                            <div class="input-group">
+                                <input type="file" name="ImageFile" class="form-control" accept="image/*" 
+                                       onchange="previewImage(this);" />
+                            </div>
+                            <small class="form-text text-muted" data-translate="optional_upload_a_new_image_for_the_faculty_max_size_5mb">Optional: Upload a new image for the faculty (Max size: 5MB)</small>
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <div class="mt-2">
+                                    <small class="text-muted" data-translate="current_image">Current image:</small>
+                                    <img src="@Model.ImageUrl" alt="Current faculty image" class="img-thumbnail mt-1" style="max-height: 100px" />
+                                </div>
+                            }
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label asp-for="MaxAcademicYears" class="form-label" data-translate="maximum_academic_years">Maximum Academic Years *</label>
+                            <input asp-for="MaxAcademicYears" type="number" min="1" max="7" class="form-control" />
+                            <span asp-validation-for="MaxAcademicYears" class="text-danger"></span>
+                            <small class="text-muted" data-translate="enter_the_number_of_years_required_to_complete_this_faculty_1-7">Enter the number of years required to complete this faculty (1-7)</small>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-secondary" data-translate="cancel">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Update Faculty
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0" data-translate="guidelines">Guidelines</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6><i class="bi bi-info-circle text-info"></i> Faculty Name</h6>
+                        <p class="small text-muted" data-translate="choose_a_clear_descriptive_name_that_users_will_easily_understand">Choose a clear, descriptive name that users will easily understand.</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6><i class="bi bi-text-paragraph text-success"></i> Description</h6>
+                        <p class="small text-muted" data-translate="provide_a_brief_description_of_what_this_faculty_encompasses">Provide a brief description of what this faculty encompasses.</p>
+                    </div>
+                    
+                    <div class="mb-0">
+                        <h6><i class="bi bi-image text-primary"></i> Image</h6>
+                        <p class="small text-muted" data-translate="upload_a_representative_image_for_the_faculty">Upload a representative image for the faculty.</p>
+                        <ul class="small text-muted mb-3">
+                            <li data-translate="supported_formats_jpg_png">Supported formats: JPG, PNG</li>
+                            <li data-translate="maximum_size_5mb">Maximum size: 5MB</li>
+                            <li data-translate="recommended_size_800x600_pixels">Recommended size: 800x600 pixels</li>
+                        </ul>
+                        <h6><i class="bi bi-info-circle text-info"></i> About Academic Years</h6>
+                        <p class="small text-muted" data-translate="set_the_number_of_academic_years_required_to_complete_this_faculty_for_example">Set the number of academic years required to complete this faculty. For example:</p>
+                        <ul class="small text-muted">
+                            <li data-translate="medicine_7_years">Medicine: 7 years</li>
+                            <li data-translate="engineering_5_years">Engineering: 5 years</li>
+                            <li data-translate="business_4_years">Business: 4 years</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Preview -->
+            <div class="card shadow mt-4" id="imagePreviewCard" style="display: none;">
+                <div class="card-header">
+                    <h5 class="mb-0" data-translate="new_image_preview">New Image Preview</h5>
+                </div>
+                <div class="card-body text-center">
+                    <img id="imagePreview" src="" alt="Preview" class="img-fluid rounded" style="max-height: 200px;" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+            const previewCard = document.getElementById('imagePreviewCard');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    previewCard.style.display = 'block';
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.src = '';
+                previewCard.style.display = 'none';
+            }
+        }
+    </script>
+}

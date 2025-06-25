@@ -1,0 +1,428 @@
+@using UniMart_App.Models
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_DashboardLayout";
+
+    string GetRelativeTime(DateTime dt)
+    {
+        var span = DateTime.Now - dt;
+        if (span.TotalMinutes < 2) return "just now";
+        if (span.TotalMinutes < 60) return $"{(int)span.TotalMinutes} minutes ago";
+        if (span.TotalHours < 2) return "1 hour ago";
+        if (span.TotalHours < 24) return $"{(int)span.TotalHours} hours ago";
+        if (span.TotalDays < 2) return "yesterday";
+        if (span.TotalDays < 30) return $"{(int)span.TotalDays} days ago";
+        if (span.TotalDays < 365) return $"{(int)(span.TotalDays / 30)} months ago";
+        return $"{(int)(span.TotalDays / 365)} years ago";
+    }
+}
+
+<style>
+    .card-link {
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.2s ease-in-out;
+        display: block;
+    }
+
+    .card-link:hover {
+        transform: translateY(-5px);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .card-link:hover .card {
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+
+    .role-stat-link {
+        transition: transform 0.2s ease-in-out;
+        display: block;
+    }
+
+    .role-stat-link:hover {
+        transform: translateY(-5px);
+        text-decoration: none !important;
+    }
+
+    .activity-item {
+        transition: all 0.3s ease-in-out;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid transparent;
+        cursor: pointer;
+    }
+
+    .activity-item:hover {
+        transform: translateX(5px);
+        background-color: rgba(0,0,0,0.03);
+        border-color: rgba(0,0,0,0.1);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0,0,0,0.03);
+        border-radius: 50%;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .activity-item:hover .activity-icon {
+        transform: scale(1.1);
+    }
+
+    .system-health-item {
+        transition: all 0.3s ease-in-out;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+    }
+
+    .system-health-item:hover {
+        background-color: rgba(0,0,0,0.03);
+        transform: translateX(5px);
+    }
+
+    .system-alert {
+        transition: all 0.3s ease-in-out;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        border: 1px solid transparent;
+    }
+
+    .system-alert:hover {
+        background-color: rgba(0,0,0,0.03);
+        transform: translateX(5px);
+        border-color: rgba(0,0,0,0.1);
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <!-- Dashboard Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-0" data-translate="admin_dashboard">Admin Dashboard</h2>
+            <p class="text-muted" data-translate="system_overview_and_management_tools">System overview and management tools</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("Users", "Admin")" class="card-link">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Total Users
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    @ViewBag.Stats.TotalUsers
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-people fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("Products", "Admin")" class="card-link">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Total Products
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    @ViewBag.Stats.TotalProducts
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-box-seam fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("Orders", "Admin")" class="card-link">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    Total Orders
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    @ViewBag.Stats.TotalOrders
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-cart-check fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("Revenue", "Admin")" class="card-link">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Total Revenue
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    @ViewBag.Stats.TotalRevenue.ToString("N2") EGP
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-currency-dollar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Role Distribution -->
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" data-translate="user_role_distribution">User Role Distribution</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <a href="@Url.Action("Users", "Admin", new { role = "Admin" })" class="text-decoration-none role-stat-link">
+                                <div class="mb-2">
+                                    <i class="bi bi-shield-check text-danger" style="font-size: 2rem;"></i>
+                                </div>
+                                <h4 class="text-danger">@ViewBag.Stats.AdminCount</h4>
+                                <p class="text-muted mb-0" data-translate="administrators">Administrators</p>
+                            </a>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <a href="@Url.Action("Merchants", "Admin")" class="text-decoration-none role-stat-link">
+                                <div class="mb-2">
+                                    <i class="bi bi-shop text-warning" style="font-size: 2rem;"></i>
+                                </div>
+                                <h4 class="text-warning">@ViewBag.Stats.MerchantCount</h4>
+                                <p class="text-muted mb-0" data-translate="merchants">Merchants</p>
+                            </a>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <a href="@Url.Action("Users", "Admin", new { role = "Customer" })" class="text-decoration-none role-stat-link">
+                                <div class="mb-2">
+                                    <i class="bi bi-person text-info" style="font-size: 2rem;"></i>
+                                </div>
+                                <h4 class="text-info">@ViewBag.Stats.UserCount</h4>
+                                <p class="text-muted mb-0" data-translate="customers">Customers</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" data-translate="quick_actions">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a asp-action="Users" class="btn btn-outline-primary btn-block">
+                                <i class="bi bi-people"></i> Manage Users
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a asp-action="Products" class="btn btn-outline-success btn-block">
+                                <i class="bi bi-box-seam"></i> Manage Products
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a asp-action="Orders" class="btn btn-outline-info btn-block">
+                                <i class="bi bi-cart-check"></i> View Orders
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a asp-action="Merchants" class="btn btn-outline-warning btn-block">
+                                <i class="bi bi-shop"></i> Manage Merchants
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a asp-action="Categories" class="btn btn-outline-secondary btn-block">
+                                <i class="bi bi-tags"></i> Manage Categories
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a asp-action="Analytics" class="btn btn-outline-dark btn-block">
+                                <i class="bi bi-graph-up"></i> View Analytics
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity and System Status -->
+    <div class="row mb-4">
+        <!-- Recent System Activity -->
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" data-translate="recent_system_activity">Recent System Activity</h6>
+                </div>
+                <div class="card-body">
+                    @foreach (var activity in ViewBag.SystemActivities)
+                    {
+                        <a href="@activity.ActionUrl" class="activity-item d-flex align-items-start mb-3 text-decoration-none text-dark">
+                            <div class="activity-icon me-3">
+                                <i class="bi @activity.Icon text-@activity.IconColor" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <div class="activity-content flex-grow-1">
+                                <h6 class="mb-1 fw-bold">@activity.Title</h6>
+                                <p class="mb-1 text-muted">@activity.Description</p>
+                                <small class="text-muted">@GetRelativeTime(activity.Timestamp)</small>
+                            </div>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- System Health -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" data-translate="system_health">System Health</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="system-health-item d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-hdd-rack me-2 text-success"></i>
+                                <small class="text-muted" data-translate="server_status">Server Status</small>
+                            </div>
+                            <span class="text-success fw-bold">@ViewBag.SystemHealth.ServerStatus</span>
+                        </div>
+                        <div class="system-health-item d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-database-check me-2 text-success"></i>
+                                <small class="text-muted" data-translate="database">Database</small>
+                            </div>
+                            <span class="text-success fw-bold">@ViewBag.SystemHealth.DatabaseStatus</span>
+                        </div>
+                        <div class="system-health-item d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person-lines-fill me-2 text-info"></i>
+                                <small class="text-muted" data-translate="active_sessions">Active Sessions</small>
+                            </div>
+                            <span class="text-info fw-bold">@ViewBag.SystemHealth.ActiveSessions</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- System Alerts -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-danger" data-translate="system_alerts">System Alerts</h6>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.SystemAlerts != null && ViewBag.SystemAlerts.Count > 0)
+                    {
+                        foreach (var alert in ViewBag.SystemAlerts)
+                        {
+                            <div class="system-alert mb-2 border border-@alert.Severity">
+                                <i class="bi @alert.Icon me-2 text-@alert.Severity"></i>
+                                <span>@alert.Message</span>
+                                @if (!string.IsNullOrEmpty(alert.ActionUrl) && alert.ActionUrl != "#")
+                                {
+                                    <a href="@alert.ActionUrl" class="ms-2 text-decoration-underline" data-translate="view">View</a>
+                                }
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-muted">No alerts.</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .border-left-primary {
+            border-left: 0.25rem solid #4e73df !important;
+        }
+        .border-left-success {
+            border-left: 0.25rem solid #1cc88a !important;
+        }
+        .border-left-info {
+            border-left: 0.25rem solid #36b9cc !important;
+        }
+        .border-left-warning {
+            border-left: 0.25rem solid #f6c23e !important;
+        }
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .timeline-marker {
+            position: absolute;
+            left: -35px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .timeline-title {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .timeline-text {
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #6c757d;
+        }
+        .alert-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+        }
+        .role-stat-link {
+            transition: transform 0.2s ease-in-out;
+            display: block;
+        }
+        .role-stat-link:hover {
+            transform: translateY(-5px);
+            text-decoration: none !important;
+        }
+    </style>
+}
+

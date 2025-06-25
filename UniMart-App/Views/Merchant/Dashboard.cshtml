@@ -1,0 +1,322 @@
+@{
+    ViewData["Title"] = "Merchant Dashboard";
+    Layout = "_DashboardLayout";
+}
+
+<div class="container-fluid py-4">
+    <!-- Dashboard Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-0" data-translate="merchant_dashboard">Merchant Dashboard</h2>
+            <p class="text-muted" data-translate="welcome_back_heres_an_overview_of_your_store_performance">Welcome back! Here's an overview of your store performance.</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("Products", "Merchant")" class="card-link">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Total Products
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    @ViewBag.Stats.TotalProducts
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-box-seam fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("Orders", "Merchant")" class="card-link">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Total Orders
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    @ViewBag.Stats.TotalOrders
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-cart-check fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("Revenue", "Merchant")" class="card-link">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    Total Revenue
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    EGP @ViewBag.Stats.TotalRevenue.ToString("N2")
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-currency-dollar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <a href="@Url.Action("Inventory", "Merchant")" class="card-link">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Low Stock Items
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    @ViewBag.Stats.LowStockProducts
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-exclamation-triangle fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" data-translate="quick_actions">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a asp-action="CreateProduct" class="btn btn-primary btn-block">
+                                <i class="bi bi-plus-circle"></i> Add New Product
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a asp-action="Products" class="btn btn-outline-primary btn-block">
+                                <i class="bi bi-box-seam"></i> Manage Products
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a asp-action="Orders" class="btn btn-outline-success btn-block">
+                                <i class="bi bi-cart-check"></i> View Orders
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a asp-action="Analytics" class="btn btn-outline-info btn-block">
+                                <i class="bi bi-graph-up"></i> View Analytics
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" data-translate="recent_activity">Recent Activity</h6>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        @if (ViewBag.LatestOrder != null)
+                        {
+                            var order = ViewBag.LatestOrder;
+                            var product = System.Linq.Enumerable.FirstOrDefault(order.OrderItems)?.Product;
+                            <a href="@Url.Action("Orders", "Merchant")" class="timeline-link">
+                                <div class="timeline-item timeline-hover">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="timeline-title" data-translate="new_order_received">New order received</h6>
+                                        <p class="timeline-text">Order #@order.Id for @product?.Name</p>
+                                        <small class="text-muted">@((DateTime.UtcNow - order.OrderDate).TotalHours < 24 ? ((int)(DateTime.UtcNow - order.OrderDate).TotalHours + " hours ago") : order.OrderDate.ToString("yyyy-MM-dd HH:mm"))</small>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                        @if (ViewBag.LatestProductUpdate != null)
+                        {
+                            var prod = ViewBag.LatestProductUpdate;
+                            <a href="@Url.Action("EditProduct", "Merchant", new { id = prod.Id })" class="timeline-link">
+                                <div class="timeline-item timeline-hover">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="timeline-title" data-translate="product_updated">Product updated</h6>
+                                        <p class="timeline-text">Updated inventory for @prod.Name</p>
+                                        <small class="text-muted">@((DateTime.UtcNow - (prod.UpdatedAt ?? prod.CreatedAt)).TotalHours < 24 ? ((int)(DateTime.UtcNow - (prod.UpdatedAt ?? prod.CreatedAt)).TotalHours + " hours ago") : (prod.UpdatedAt ?? prod.CreatedAt).ToString("yyyy-MM-dd HH:mm"))</small>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                        @if (ViewBag.LatestProductAdded != null)
+                        {
+                            var prod = ViewBag.LatestProductAdded;
+                            <a href="@Url.Action("EditProduct", "Merchant", new { id = prod.Id })" class="timeline-link">
+                                <div class="timeline-item timeline-hover">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="timeline-title" data-translate="new_product_added">New product added</h6>
+                                        <p class="timeline-text">Added @prod.Name to catalog</p>
+                                        <small class="text-muted">@((DateTime.UtcNow - prod.CreatedAt).TotalHours < 24 ? ((int)(DateTime.UtcNow - prod.CreatedAt).TotalHours + " hours ago") : prod.CreatedAt.ToString("yyyy-MM-dd HH:mm"))</small>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" data-translate="performance_summary">Performance Summary</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span data-translate="sales_this_month">Sales This Month</span>
+                            <span class="font-weight-bold">EGP @((ViewBag.SalesThisMonth ?? 0M).ToString("N0"))</span>
+                        </div>
+                        @{
+                            decimal sales = ViewBag.SalesThisMonth ?? 0M;
+                            decimal salesTarget = 5000M; // Example target, adjust as needed
+                            int salesPercent = (int)Math.Min(100, salesTarget == 0 ? 0 : (sales / salesTarget * 100));
+                        }
+                        <div class="progress mt-1">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: @salesPercent%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span data-translate="orders_this_month">Orders This Month</span>
+                            <span class="font-weight-bold">@ViewBag.OrdersThisMonth</span>
+                        </div>
+                        @{
+                            int orders = ViewBag.OrdersThisMonth ?? 0;
+                            int ordersTarget = 100; // Example target, adjust as needed
+                            int ordersPercent = Math.Min(100, ordersTarget == 0 ? 0 : (orders * 100 / ordersTarget));
+                        }
+                        <div class="progress mt-1">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: @ordersPercent%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span data-translate="customer_satisfaction">Customer Satisfaction</span>
+                            <span class="font-weight-bold">@((ViewBag.AvgRating ?? 0.0).ToString("0.0"))/5</span>
+                        </div>
+                        @{
+                            double rating = ViewBag.AvgRating ?? 0.0;
+                            int ratingPercent = (int)Math.Round((rating / 5.0) * 100);
+                        }
+                        <div class="progress mt-1">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: @ratingPercent%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .border-left-primary {
+            border-left: 0.25rem solid #4e73df !important;
+        }
+        .border-left-success {
+            border-left: 0.25rem solid #1cc88a !important;
+        }
+        .border-left-info {
+            border-left: 0.25rem solid #36b9cc !important;
+        }
+        .border-left-warning {
+            border-left: 0.25rem solid #f6c23e !important;
+        }
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .card-link:hover {
+            text-decoration: none;
+            color: inherit;
+        }
+        .card-link .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card-link:hover .card {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .timeline-marker {
+            position: absolute;
+            left: -35px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .timeline-title {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .timeline-text {
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #6c757d;
+        }
+        .timeline-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .timeline-link:hover .timeline-item {
+            background: #f8f9fc;
+            box-shadow: 0 0.25rem 0.5rem rgba(78,115,223,0.05);
+            border-radius: 8px;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .timeline-hover {
+            cursor: pointer;
+        }
+    </style>
+}
+

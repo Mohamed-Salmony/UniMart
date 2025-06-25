@@ -1,0 +1,225 @@
+:root {
+  --bg-light: #f5fafa;
+  --bg-dark: #121212;
+  --text-light: #333;
+  --text-dark: #f5f5f5;
+  --card-light: white;
+  --card-dark: #1e1e1e;
+  --border-light: #ddd;
+  --border-dark: #333;
+  --primary-color: #1a73e8;
+  --primary-hover: #1669c1;
+  --transition-speed: 0.3s;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: background-color var(--transition-speed) ease, 
+  color var(--transition-speed) ease;
+  overflow-y: auto;
+}
+
+body.dark-mode {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+.container-fluid {
+  min-height: 100%;
+  height: auto;
+  position: relative;
+}
+
+.left-section {
+  background-color: var(--card-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-speed) ease;
+  min-height: 100vh;
+  position: relative;
+  padding: 2rem;
+}
+
+.right-section {
+  min-height: 100vh;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.dark-mode .left-section {
+  background-color: var(--card-dark);
+}
+
+.logo-img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  transition: filter var(--transition-speed) ease;
+  border-radius:50%;
+}
+
+.unimart-logo {
+  font-size: 2.5rem;
+}
+
+.unimart-blue {
+  color: #002c50 !important;
+}
+
+.unimart-orange {
+  color: #e5ad40 !important;
+}
+
+.dark-mode .unimart-blue {
+  color: #89CFF0 !important;
+}
+
+.dark-mode .unimart-orange {
+  color: #FFA500 !important;
+}
+
+.dark-mode .logo-img {
+  filter: brightness(0.8);
+}
+
+.tab-btn {
+  border-radius: 50rem;
+  font-weight: bold;
+  padding: 0.5rem 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+}
+
+.tab-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.tab-active {
+  background-color: var(--card-light);
+  border: 1px solid var(--border-light);
+  color: var(--primary-color) !important;
+}
+
+
+.dark-mode .tab-active {
+  background-color: var(--card-dark);
+  border-color: var(--border-dark);
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.form-control {
+  border-radius: 0.5rem;
+  transition: all var(--transition-speed) ease;
+}
+
+.dark-mode .form-control {
+  background-color: var(--card-dark);
+  border-color: var(--border-dark);
+  color: var(--text-dark);
+}
+
+.dark-mode .input-group-text {
+  background-color: var(--card-dark) !important;
+  border-color: var(--border-dark) !important;
+  color: var(--text-dark) !important;
+}
+
+.dark-mode .input-group-text i {
+  color: var(--text-dark) !important;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border: none;
+  transition: background-color var(--transition-speed) ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.divider {
+  border-top: 1px solid var(--border-light);
+  transition: border-color var(--transition-speed) ease;
+}
+
+.dark-mode .divider {
+  border-color: var(--border-dark);
+}
+
+.dark-toggle {
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.dark-toggle:hover {
+  color: var(--primary-color);
+}
+
+.dark-mode .dark-toggle i {
+  transform: rotate(180deg);
+}
+
+.container-fluid.page-transition {
+  animation: fadeIn var(--transition-speed) ease;
+  min-height: 100vh;
+  overflow: visible;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .left-section, .right-section {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .tab-btn {
+    font-size: 14px;
+    padding: 0.5rem 1.5rem;
+  }
+}
+
+.fw-bold span {
+  /* Removed inherit to ensure proper color application */
+  color: unset;
+}
+
+/* New color classes */
+.color-primary {
+  color: var(--primary-color);
+}
+
+.color-secondary {
+  color: var(--primary-hover);
+}

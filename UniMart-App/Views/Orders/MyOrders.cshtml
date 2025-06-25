@@ -1,0 +1,115 @@
+@model IEnumerable<UniMart_App.Models.Order>
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<style>
+    .order-row { cursor: pointer; transition: background 0.2s; }
+    .order-row:hover { background: #f0f8ff; }
+    .order-details-row { background: #f9f9f9; animation: fadeIn 0.5s; }
+    .search-bar { max-width: 350px; margin-bottom: 1rem; }
+    .badge-warning { background: #ffc107; color: #212529; }
+    .badge-success { background: #28a745; }
+    .badge-danger { background: #dc3545; }
+    .badge-secondary { background: #6c757d; }
+    .table thead { background: #007bff; color: #fff; }
+    .table { border-radius: 10px; overflow: hidden; }
+</style>
+
+<h2 class="mb-4 text-center" data-translate="my_orders">My Orders</h2>
+<input type="text" class="form-control search-bar" id="orderSearch" placeholder="Search by Order #, Status, or Product..." />
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You have not placed any orders yet.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered bg-white rounded shadow-sm" id="ordersTable">
+            <thead>
+                <tr>
+                    <th data-translate="order">Order #</th>
+                    <th data-translate="date">Date</th>
+                    <th data-translate="status">Status</th>
+                    <th data-translate="items">Items</th>
+                    <th data-translate="total">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr class="order-row animate__animated" data-order-id="@order.Id" data-status="@order.Status.ToLower()" data-products="@string.Join(",", order.OrderItems.Select(i => i.Product?.Name?.ToLower() ?? ""))">
+                        <td>@order.Id</td>
+                        <td>@order.OrderDate.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td><span class="badge badge-@GetStatusClass(order.Status)">@order.Status</span></td>
+                        <td>@order.OrderItems.Count</td>
+                        <td><strong>@order.TotalAmount.ToString("N") EGP</strong></td>
+                    </tr>
+                    <tr class="order-details-row animate__animated animate__fadeIn" style="display:none;">
+                        <td colspan="5">
+                            <ul class="list-unstyled mb-0">
+                                @foreach (var item in order.OrderItems)
+                                {
+                                    <li>
+                                        <strong>@item.Product?.Name</strong> x @item.Quantity <span class="text-muted">(@item.Price.ToString("C"))</span>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        // Expand/collapse order items with animation
+        document.querySelectorAll('.order-row').forEach(function(row) {
+            row.addEventListener('click', function() {
+                var details = this.nextElementSibling;
+                if (details && details.classList.contains('order-details-row')) {
+                    if (details.style.display === 'table-row') {
+                        details.classList.remove('animate__fadeIn');
+                        details.classList.add('animate__fadeOut');
+                        setTimeout(function() { details.style.display = 'none'; details.classList.remove('animate__fadeOut'); }, 400);
+                    } else {
+                        details.style.display = 'table-row';
+                        details.classList.add('animate__fadeIn');
+                    }
+                }
+            });
+        });
+
+        // Filtering/searching
+        document.getElementById('orderSearch').addEventListener('input', function() {
+            var search = this.value.toLowerCase();
+            document.querySelectorAll('#ordersTable tbody tr.order-row').forEach(function(row) {
+                var orderId = row.getAttribute('data-order-id');
+                var status = row.getAttribute('data-status');
+                var products = row.getAttribute('data-products');
+                var match = orderId.includes(search) || status.includes(search) || products.includes(search);
+                row.style.display = match ? '' : 'none';
+                var details = row.nextElementSibling;
+                if (details && details.classList.contains('order-details-row')) {
+                    details.style.display = match && details.style.display === 'table-row' ? 'table-row' : 'none';
+                }
+            });
+        });
+    </script>
+}
+
+@functions {
+    string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "Pending" => "warning",
+            "Completed" => "success",
+            "Cancelled" => "danger",
+            _ => "secondary"
+        };
+    }
+}

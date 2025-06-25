@@ -1,0 +1,194 @@
+@model UniMart_App.ViewModels.CardListViewModel
+@{
+    ViewData["Title"] = "Payment Cards";
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/front-end/Cards.css">
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 data-translate="payment_cards">Payment Cards</h4>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCardModal">
+            <i class="bi bi-plus-lg"></i> Add New Card
+        </button>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        @if (Model.Cards != null && Model.Cards.Any())
+        {
+            @foreach (var card in Model.Cards)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card-container @(card.IsDefault ? "default" : "")">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="card-type">@card.CardType</span>
+                                @if (card.IsDefault)
+                                {
+                                    <span class="default-badge" data-translate="default">Default</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-number">@card.MaskedCardNumber</div>
+                            <div class="card-details">
+                                <div class="cardholder">@card.CardholderName</div>
+                                <div class="expiry">Expires: @card.ExpiryDate</div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between">
+                                @if (!card.IsDefault)
+                                {
+                                    <form asp-action="SetDefault" method="post">
+                                        <input type="hidden" name="id" value="@card.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-primary" data-translate="set_as_default">Set as Default</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span></span>
+                                }
+                                <form asp-action="Delete" method="post" onsubmit="return confirm('Are you sure you want to remove this card?');">
+                                    <input type="hidden" name="id" value="@card.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" data-translate="remove">Remove</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="bi bi-credit-card display-1 text-muted"></i>
+                    <h5 class="mt-3" data-translate="no_payment_cards">No Payment Cards</h5>
+                    <p class="text-muted" data-translate="you_havent_added_any_payment_cards_yet">You haven't added any payment cards yet.</p>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCardModal">
+                        Add Your First Card
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Add Card Modal -->
+<div class="modal fade" id="addCardModal" tabindex="-1" aria-labelledby="addCardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCardModalLabel" data-translate="add_payment_card">Add Payment Card</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Create" method="post" id="cardForm">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="NewCard.CardholderName" class="form-label"></label>
+                        <input asp-for="NewCard.CardholderName" class="form-control" />
+                        <span asp-validation-for="NewCard.CardholderName" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="NewCard.CardNumber" class="form-label"></label>
+                        <input asp-for="NewCard.CardNumber" class="form-control" placeholder="1234 5678 9012 3456" maxlength="16" />
+                        <span asp-validation-for="NewCard.CardNumber" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="NewCard.ExpiryDate" class="form-label"></label>
+                            <input asp-for="NewCard.ExpiryDate" class="form-control" placeholder="MM/YY" maxlength="5" />
+                            <span asp-validation-for="NewCard.ExpiryDate" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="NewCard.CVV" class="form-label"></label>
+                            <input asp-for="NewCard.CVV" class="form-control" placeholder="123" maxlength="4" />
+                            <span asp-validation-for="NewCard.CVV" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input asp-for="NewCard.IsDefault" class="form-check-input" />
+                        <label asp-for="NewCard.IsDefault" class="form-check-label"></label>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary" data-translate="add_card">Add Card</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Format card number input with spaces
+            const cardNumberInput = document.getElementById('NewCard_CardNumber');
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', function(e) {
+                    // Remove any non-digit characters
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    // Limit to 16 digits
+                    if (value.length > 16) {
+                        value = value.slice(0, 16);
+                    }
+                    
+                    e.target.value = value;
+                });
+            }
+            
+            // Format expiry date input with slash
+            const expiryDateInput = document.getElementById('NewCard_ExpiryDate');
+            if (expiryDateInput) {
+                expiryDateInput.addEventListener('input', function(e) {
+                    // Remove any non-digit characters
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    // Format as MM/YY
+                    if (value.length > 2) {
+                        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+                    }
+                    
+                    e.target.value = value;
+                });
+            }
+            
+            // Only allow digits in CVV field
+            const cvvInput = document.getElementById('NewCard_CVV');
+            if (cvvInput) {
+                cvvInput.addEventListener('input', function(e) {
+                    // Remove any non-digit characters
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    // Limit to 4 digits
+                    if (value.length > 4) {
+                        value = value.slice(0, 4);
+                    }
+                    
+                    e.target.value = value;
+                });
+            }
+        });
+    </script>
+}

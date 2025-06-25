@@ -1,0 +1,225 @@
+@model IEnumerable<UniMart_App.Models.Order>
+@using System.Globalization
+@{
+    ViewData["Title"] = "Orders Management";
+    Layout = "_DashboardLayout";
+    var statusList = new[] { "Pending", "Processing", "Shipped", "Delivered", "Cancelled" };
+}
+<div class="container mt-4">
+    <h2 class="mb-4 fw-bold" data-translate="orders_management">Orders Management</h2>
+    <div class="mb-3 text-end">
+        <a href="/Admin/ExportOrdersToExcel" class="btn btn-success">
+            <i class="bi bi-file-earmark-excel"></i> Export to Excel
+        </a>
+    </div>
+    <!-- Filter/Search Bar -->
+    <form class="row g-3 mb-3" id="orderFilterForm" asp-action="Orders" method="get" autocomplete="off">
+        <div class="col-md-3">
+            <select class="form-select" id="statusFilter" name="status">
+                <option value="">All Statuses</option>
+                @foreach (var status in statusList)
+                {
+                    <option value="@status">@status</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="date" class="form-control" id="dateFilter" name="date" />
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control" id="searchBox" name="search" placeholder="Search by email or order ID" />
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-outline-primary w-100" id="applyFilterBtn" data-translate="filter">Filter</button>
+        </div>
+    </form>
+
+    <!-- Admin Orders Table Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white fw-bold">
+            User Orders
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th data-translate="order_id">Order ID</th>
+                            <th data-translate="date">Date</th>
+                            <th data-translate="customer">Customer</th>
+                            <th data-translate="status">Status</th>
+                            <th data-translate="total">Total</th>
+                            <th data-translate="actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            var badgeClass = order.ShippingStatus switch {
+                                "Pending" => "bg-warning text-dark",
+                                "Processing" => "bg-info text-dark",
+                                "Shipped" => "bg-primary",
+                                "Delivered" => "bg-success",
+                                "Cancelled" => "bg-danger",
+                                _ => "bg-secondary"
+                            };
+                            decimal taxPercentage = ViewBag.TaxPercentage != null ? (decimal)ViewBag.TaxPercentage : 14;
+                            decimal taxAmount = order.TotalAmount * (taxPercentage / 100);
+                            decimal shipping = ViewBag.TotalUserRewards != null ? (decimal)ViewBag.TotalUserRewards : 0;
+                            decimal grandTotal = order.TotalAmount + taxAmount + shipping;
+                        <tr>
+                            <td>#@order.Id</td>
+                            <td>@order.OrderDate.ToString("MMM dd, yyyy HH:mm")</td>
+                            <td>@order.User?.FullName</td>
+                            <td><span class="badge @badgeClass">@(string.IsNullOrEmpty(order.ShippingStatus) ? "Pending" : order.ShippingStatus)</span></td>
+                            <td>@grandTotal.ToString("N2") EGP</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#orderDetails-@order.Id" aria-expanded="false" aria-controls="orderDetails-@order.Id">
+                                    <i class="bi bi-eye"></i> View
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="collapse" id="orderDetails-@order.Id">
+                            <td colspan="6" class="bg-light">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="card p-3 border-0 shadow-sm h-100">
+                                            <h6 class="fw-semibold mb-2" data-translate="order_items">Order Items</h6>
+                                            <div class="table-responsive">
+                                                <table class="table table-sm align-middle mb-0">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th data-translate="product">Product</th>
+                                                            <th data-translate="thumbnail">Thumbnail</th>
+                                                            <th data-translate="qty">Qty</th>
+                                                            <th data-translate="price">Price</th>
+                                                            <th data-translate="subtotal">Subtotal</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @if (order.OrderItems != null)
+                                                        {
+                                                            foreach (var item in order.OrderItems)
+                                                            {
+                                                                <tr>
+                                                                    <td>@item.Product?.Name</td>
+                                                                    <td>
+                                                                        @if (item.Product?.ProductImages != null && item.Product.ProductImages.Any())
+                                                                        {
+                                                                            <img src="@item.Product.ProductImages.First().ImageUrl" alt="thumb" style="width:40px;height:40px;object-fit:cover;border-radius:6px;" />
+                                                                        }
+                                                                    </td>
+                                                                    <td>@item.Quantity</td>
+                                                                    <td>@item.Price.ToString("N2") EGP</td>
+                                                                    <td>@($"{(item.Quantity * item.Price):N2} EGP")</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                        <tr>
+                                                            <td colspan="4" class="text-end"><strong>Subtotal:</strong></td>
+                                                            <td><strong>@order.TotalAmount.ToString("N2") EGP</strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="4" class="text-end"><strong>Tax (@taxPercentage.ToString("N2")%):</strong></td>
+                                                            <td><strong>@taxAmount.ToString("N2") EGP</strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="4" class="text-end"><strong>Shipping:</strong></td>
+                                                            <td><strong>@shipping.ToString("N2") EGP</strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="4" class="text-end"><strong>Grand Total:</strong></td>
+                                                            <td><strong>@grandTotal EGP</strong></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card p-3 border-0 shadow-sm h-100">
+                                            <h6 class="fw-semibold mb-2" data-translate="shipping_customer_info">Shipping & Customer Info</h6>
+                                            <p><strong>Order Date:</strong> @order.OrderDate.ToString("MMM dd, yyyy HH:mm")</p>
+                                            <p><strong>Customer:</strong> @order.User?.FullName</p>
+                                            <p><strong>Email:</strong> @order.User?.Email</p>
+                                            <p><strong>Phone:</strong> @order.User?.PhoneNumber</p>
+                                            <p><strong>Shipping Address:</strong> @order.ShippingAddress</p>
+                                            <p><strong>Tracking #:</strong> @order.TrackingNumber</p>
+                                            <p><strong>Delivery Date:</strong> @(order.DeliveryDate?.ToString("MMM dd, yyyy"))</p>
+                                            <form class="d-flex align-items-center gap-2 mt-2" onsubmit="return updateOrderStatus(event, @order.Id)">
+                                                @Html.AntiForgeryToken()
+                                                <select class="form-select" name="status" style="width:auto;">
+                                                    @foreach (var status in statusList)
+                                                    {
+                                                        if (order.ShippingStatus == status)
+                                                        {
+                                                            <option value="@status" selected>@status</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@status">@status</option>
+                                                        }
+                                                    }
+                                                </select>
+                                                <button type="submit" class="btn btn-success" data-translate="update">Update</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Toast for feedback -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+        <div id="orderToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="orderToastBody"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+<script>
+function updateOrderStatus(event, orderId) {
+    event.preventDefault();
+    const form = event.target;
+    const status = form.status.value;
+    // Get the anti-forgery token from the form
+    const token = form.querySelector('input[name="__RequestVerificationToken"]').value;
+    // Try all common anti-forgery header names
+    fetch(`/Admin/UpdateOrderStatus`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'RequestVerificationToken': token,
+            'X-CSRF-TOKEN': token,
+            'X-RequestVerificationToken': token
+        },
+        body: JSON.stringify({ id: orderId, status })
+    })
+    .then(async res => {
+        let data;
+        try { data = await res.json(); } catch { data = { success: false }; }
+        showOrderToast(data.success ? 'Status updated!' : 'Failed to update status', data.success);
+        if (data.success) {
+            setTimeout(() => location.reload(), 1000);
+        }
+    });
+    return false;
+}
+function showOrderToast(message, success) {
+    const toastEl = document.getElementById('orderToast');
+    const toastBody = document.getElementById('orderToastBody');
+    toastBody.textContent = message;
+    toastEl.classList.remove('text-bg-primary', 'text-bg-danger');
+    toastEl.classList.add(success ? 'text-bg-primary' : 'text-bg-danger');
+    new bootstrap.Toast(toastEl).show();
+}
+</script>
+}

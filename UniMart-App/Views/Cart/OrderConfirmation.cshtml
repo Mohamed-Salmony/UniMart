@@ -1,0 +1,22 @@
+@model UniMart_App.Models.Order
+@{
+    ViewBag.Title = "Order Confirmation";
+}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="mb-3 text-success"><i class="bi bi-check-circle"></i> Thank you for your order!</h2>
+                    <p class="lead" data-translate="your_order_has_been_placed_successfully">Your order has been placed successfully.</p>
+                    <hr>
+                    <h5 data-translate="order_details">Order Details</h5>
+                    <p><strong>Order ID:</strong> @Model.Id</p>
+                    <p><strong>Date:</strong> @Model.OrderDate.ToLocalTime().ToString("f")</p>
+                    <p><strong>Status:</strong> @Model.Status</p>
+                    <a href="/" class="btn btn-primary mt-3" data-translate="continue_shopping">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

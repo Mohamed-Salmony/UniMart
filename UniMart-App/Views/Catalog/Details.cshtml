@@ -1,0 +1,247 @@
+@model UniMart_App.ViewModels.ProductDetailsViewModel
+@{
+    ViewData["Title"] = Model.Product.Name;
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/front-end/ProductDetails.css">
+}
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" data-translate="home">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Catalog" asp-action="Index" data-translate="catalog">Catalog</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Catalog" asp-action="Index" asp-route-faculty="@Model.Product.Faculty.Name">@Model.Product.Faculty.Name</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Product.Name</li>
+        </ol>
+    </nav>
+
+    <div class="product-details">
+        <div class="row">
+            <!-- Product Image -->
+            <div class="col-md-5 mb-4">
+                <div class="product-image-container">
+                    @if (Model.Product.ProductImages != null && Model.Product.ProductImages.Any())
+                    {
+                        <img class="img-fluid w-100 pb-2" src="@Model.Product.ProductImages.First().ImageUrl" alt="@Model.Product.Name">
+                    }
+                    else
+                    {
+                        <img class="img-fluid w-100 pb-2" src="/img/product-placeholder.png" alt="No image">
+                    }
+                </div>
+            </div>
+            
+            <!-- Product Info -->
+            <div class="col-md-7">
+                <h2 class="product-title">@Model.Product.Name</h2>
+                
+                <div class="product-meta">
+                    <div class="product-rating">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= Math.Round(Model.Product.AverageRating))
+                            {
+                                <i class="bi bi-star-fill"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-star"></i>
+                            }
+                        }
+                        <span class="rating-count">(@Model.Product.Ratings.Count reviews)</span>
+                    </div>
+                    <span class="product-category">Faculty: <a asp-controller="Catalog" asp-action="Index" asp-route-faculty="@Model.Product.Faculty.Name">@Model.Product.Faculty.Name</a></span>
+                </div>
+                
+                <div class="product-price">$@Model.Product.Price.ToString("F2")</div>
+                
+                <div class="product-description">
+                    <h5 data-translate="description">Description</h5>
+                    <p>@Model.Product.Description</p>
+                </div>
+                
+                <div class="product-seller">
+                    <h5 data-translate="seller_information">Seller Information</h5>
+                    <div class="seller-info">
+                        <img src="@(string.IsNullOrEmpty(Model.Product.User.ProfileImageUrl) ? "/img/default-profile.png" : Model.Product.User.ProfileImageUrl)" alt="@Model.Product.User.FullName" class="seller-image">
+                        <div>
+                            <p class="seller-name">@Model.Product.User.FullName</p>
+                            <p class="seller-faculty">@(Model.Product.User.Faculty?.Name ?? "Unknown Faculty")</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-actions">
+                    <button class="btn btn-primary btn-lg">
+                        <i class="bi bi-cart-plus"></i> Add to Cart
+                    </button>
+                    
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (Model.IsFavorite)
+                        {
+                            <form asp-action="RemoveFromFavorites" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@Model.Product.Id" />
+                                <button type="submit" class="btn btn-outline-danger btn-lg">
+                                    <i class="bi bi-heart-fill"></i> Remove from Favorites
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-action="AddToFavorites" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@Model.Product.Id" />
+                                <button type="submit" class="btn btn-outline-danger btn-lg">
+                                    <i class="bi bi-heart"></i> Add to Favorites
+                                </button>
+                            </form>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        
+        <!-- Product Reviews -->
+        <div class="product-reviews mt-5">
+            <h3 data-translate="customer_reviews">Customer Reviews</h3>
+            
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="add-review-form mb-4">
+                    <h5 data-translate="add_your_review">Add Your Review</h5>
+                    <form asp-action="AddRating" method="post">
+                        <input type="hidden" asp-for="Rating.ProductId" value="@Model.Product.Id" />
+                        
+                        <div class="mb-3">
+                            <label class="form-label" data-translate="rating">Rating</label>
+                            <div class="rating-input">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <input type="radio" id="star@i" name="Rating.Rating" value="@i" />
+                                    <label for="star@i"><i class="bi bi-star-fill"></i></label>
+                                }
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="Rating_Comment" class="form-label" data-translate="comment">Comment</label>
+                            <textarea id="Rating_Comment" name="Rating.Comment" class="form-control" rows="3" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" data-translate="submit_review">Submit Review</button>
+                    </form>
+                </div>
+            }
+            
+            @if (Model.Product.Ratings.Any())
+            {
+                <div class="reviews-list">
+                    @foreach (var rating in Model.Product.Ratings.OrderByDescending(r => r.CreatedAt))
+                    {
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="reviewer-info">
+                                    <img src="@(string.IsNullOrEmpty(rating.User.ProfileImageUrl) ? "/img/default-profile.png" : rating.User.ProfileImageUrl)" alt="@rating.User.FullName" class="reviewer-image">
+                                    <div>
+                                        <p class="reviewer-name">@rating.User.FullName</p>
+                                        <p class="review-date">@rating.CreatedAt.ToString("MMM dd, yyyy")</p>
+                                    </div>
+                                </div>
+                                <div class="review-rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= rating.Rating)
+                                        {
+                                            <i class="bi bi-star-fill"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-star"></i>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="review-content">
+                                <p>@rating.Comment</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-reviews">
+                    <p data-translate="no_reviews_yet_be_the_first_to_review_this_product">No reviews yet. Be the first to review this product!</p>
+                </div>
+            }
+        </div>
+        
+        <!-- Related Products -->
+        @if (Model.RelatedProducts.Any())
+        {
+            <div class="related-products mt-5">
+                <h3>Related Products from @Model.Product.Faculty.Name</h3>
+                <div class="row">
+                    @foreach (var relatedProduct in Model.RelatedProducts)
+                    {
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="product-card">
+                                <a asp-action="Details" asp-route-id="@relatedProduct.Id" class="product-link">
+                                    <div class="product-image">
+                                        <img src="@(relatedProduct.ProductImages != null && relatedProduct.ProductImages.Any() ? relatedProduct.ProductImages.First().ImageUrl : "/img/product-placeholder.png")" alt="@relatedProduct.Name" class="img-fluid">
+                                    </div>
+                                    <div class="product-info">
+                                        <h5 class="product-name">@relatedProduct.Name</h5>
+                                        <div class="product-meta">
+                                            <span class="product-price">$@relatedProduct.Price.ToString("F2")</span>
+                                            <div class="product-rating">
+                                                @for (int i = 1; i <= 5; i++)
+                                                {
+                                                    if (i <= Math.Round(relatedProduct.AverageRating))
+                                                    {
+                                                        <i class="bi bi-star-fill"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="bi bi-star"></i>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Rating stars interaction
+            const ratingInputs = document.querySelectorAll('.rating-input input');
+            const ratingLabels = document.querySelectorAll('.rating-input label');
+            
+            ratingInputs.forEach((input, index) => {
+                input.addEventListener('change', function() {
+                    // Reset all stars
+                    ratingLabels.forEach(label => {
+                        label.classList.remove('active');
+                    });
+                    
+                    // Fill stars up to selected rating
+                    for (let i = 0; i <= index; i++) {
+                        ratingLabels[i].classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+}

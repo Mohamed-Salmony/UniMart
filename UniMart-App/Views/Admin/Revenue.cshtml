@@ -1,0 +1,267 @@
+@{
+    ViewData["Title"] = "Revenue Management";
+    Layout = "_DashboardLayout";
+}
+
+<style>
+    .overview-card {
+        cursor: pointer;
+        transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .overview-card:hover, .overview-card.selected {
+        box-shadow: 0 0 0 0.2rem #007bff33;
+        border: 2px solid #007bff;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-0" data-translate="revenue_management">Revenue Management</h2>
+            <p class="text-muted" data-translate="manage_platform_fees_and_revenue_settings">Manage platform fees and revenue settings</p>
+        </div>
+    </div>
+
+    <!-- Configuration Cards -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" data-translate="merchant_fee_settings">Merchant Fee Settings</h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdateMerchantFee" method="post">
+                        <div class="mb-3">
+                            <label class="form-label" data-translate="merchant_fee_percentage">Merchant Fee Percentage (%)</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" name="merchantFeePercentage" 
+                                       value="@ViewBag.MerchantFeePercentage" 
+                                       step="0.01" min="0" max="100" required>
+                                <span class="input-group-text" data-translate="">%</span>
+                            </div>
+                            <small class="text-muted">
+                                This percentage will be deducted from merchants for each product they add to the platform.
+                            </small>
+                        </div>
+                        <button type="submit" class="btn btn-primary" data-translate="update_merchant_fee">Update Merchant Fee</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" data-translate="user_fee_settings">User Fee Settings</h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdateUserFee" method="post">
+                        <div class="mb-3">
+                            <label class="form-label" data-translate="user_fee_percentage">User Fee Percentage (%)</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" name="userFeePercentage" 
+                                       value="@ViewBag.UserFeePercentage" 
+                                       step="0.01" min="0" max="100" required>
+                                <span class="input-group-text" data-translate="">%</span>
+                            </div>
+                            <small class="text-muted">
+                                This percentage will be deducted from users for each product they purchase.
+                            </small>
+                        </div>
+                        <button type="submit" class="btn btn-primary" data-translate="update_user_fee">Update User Fee</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rewards Configuration -->
+    <div class="row">
+        <div class="col-lg-12 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" data-translate="shipping_cost_settings">Shipping Cost Settings</h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdateUserReward" method="post">
+                        <div class="mb-3">
+                            <label class="form-label" data-translate="shipping_cost">Shipping Cost</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" name="userRewardPercentage" 
+                                       value="@ViewBag.UserRewardPercentage" 
+                                       step="0.01" min="0" required>
+                                <span class="input-group-text" data-translate="egp">EGP</span>
+                            </div>
+                            <small class="text-muted">
+                                This amount (in EGP) will be displayed as the shipping cost for each order.
+                            </small>
+                        </div>
+                        <button type="submit" class="btn btn-primary" data-translate="update_shipping_cost">Update Shipping Cost</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue Statistics -->
+    <div class="row">
+        <div class="col-lg-12 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" data-translate="revenue_statistics">Revenue Statistics</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="border rounded p-3 overview-card" data-metric="platformRevenue">
+                                <h6 class="text-muted" data-translate="total_platform_revenue">Total Platform Revenue</h6>
+                                <h4 class="text-primary">$@ViewBag.TotalPlatformRevenue?.ToString("N2")</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="border rounded p-3 overview-card" data-metric="merchantFees">
+                                <h6 class="text-muted" data-translate="merchant_fees_collected">Merchant Fees Collected</h6>
+                                <h4 class="text-success">$@ViewBag.TotalMerchantFees?.ToString("N2")</h4>
+                            </div>
+                        </div>                            <div class="col-md-3 mb-4">
+                            <div class="border rounded p-3 overview-card" data-metric="userFees">
+                                <h6 class="text-muted" data-translate="user_fees_collected">User Fees Collected</h6>
+                                <h4 class="text-warning">$@ViewBag.TotalUserFees?.ToString("N2")</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="border rounded p-3 overview-card" data-metric="shippingCost">
+                                <h6 class="text-muted" data-translate="user_shipping_cost">User Shipping Cost</h6>
+                                <h4 class="text-info">$@ViewBag.TotalUserRewards?.ToString("N2")</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="border rounded p-3 overview-card" data-metric="netRevenue">
+                                <h6 class="text-muted" data-translate="net_revenue">Net Revenue</h6>
+                                <h4 class="text-warning">$@ViewBag.NetRevenue?.ToString("N2")</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <canvas id="revenueChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            const revenueData = @Html.Raw(Json.Serialize(ViewBag.RevenueData ?? new object[0]));
+            const merchantFees = @ViewBag.TotalMerchantFees ?? 0;
+            const userFees = @ViewBag.TotalUserFees ?? 0;
+            const shippingCost = @ViewBag.TotalUserRewards ?? 0;
+            const netRevenue = @ViewBag.NetRevenue ?? 0;
+            // For demo, spread static values equally across days (replace with per-day if available)
+            const days = revenueData.length > 0 ? revenueData.length : 1;
+            const merchantFeesData = Array(days).fill(merchantFees / days);
+            const userFeesData = Array(days).fill(userFees / days);
+            const shippingCostData = Array(days).fill(shippingCost / days);
+            const netRevenueData = Array(days).fill(netRevenue / days);
+
+            const chartDatasets = [
+                {
+                    label: 'Platform Revenue',
+                    data: revenueData.map(d => d.revenue),
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                    tension: 0.1,
+                    fill: true,
+                },
+                {
+                    label: 'Merchant Fees',
+                    data: merchantFeesData,
+                    borderColor: 'rgb(40, 167, 69)',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    borderDash: [5, 5],
+                    tension: 0.1,
+                    hidden: true
+                },
+                {
+                    label: 'User Fees',
+                    data: userFeesData,
+                    borderColor: 'rgb(255, 193, 7)',
+                    backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                    borderDash: [5, 5],
+                    tension: 0.1,
+                    hidden: true
+                },
+                {
+                    label: 'Shipping Cost',
+                    data: shippingCostData,
+                    borderColor: 'rgb(23, 162, 184)',
+                    backgroundColor: 'rgba(23, 162, 184, 0.1)',
+                    borderDash: [5, 5],
+                    tension: 0.1,
+                    hidden: true
+                },
+                {
+                    label: 'Net Revenue',
+                    data: netRevenueData,
+                    borderColor: 'rgb(255, 193, 7)',
+                    backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                    borderDash: [2, 2],
+                    tension: 0.1,
+                    hidden: true
+                }
+            ];
+
+            const revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: revenueData.map(d => new Date(d.date).toLocaleDateString()),
+                    datasets: chartDatasets
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Revenue Trends'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Revenue ($)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Card click logic
+            const overviewCards = document.querySelectorAll('.overview-card');
+            overviewCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    overviewCards.forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    const metric = this.getAttribute('data-metric');
+                    // Hide all datasets
+                    revenueChart.data.datasets.forEach(ds => ds.hidden = true);
+                    // Show only the selected metric
+                    if (metric === 'platformRevenue') revenueChart.data.datasets[0].hidden = false;
+                    else if (metric === 'merchantFees') revenueChart.data.datasets[1].hidden = false;
+                    else if (metric === 'userFees') revenueChart.data.datasets[2].hidden = false;
+                    else if (metric === 'shippingCost') revenueChart.data.datasets[3].hidden = false;
+                    else if (metric === 'netRevenue') revenueChart.data.datasets[4].hidden = false;
+                    revenueChart.update();
+                });
+            });
+            // Select the first card by default
+            overviewCards[0].classList.add('selected');
+            revenueChart.data.datasets.forEach((ds, i) => ds.hidden = i > 0); // Show platform revenue by default
+            revenueChart.update();
+        });
+    </script>
+}

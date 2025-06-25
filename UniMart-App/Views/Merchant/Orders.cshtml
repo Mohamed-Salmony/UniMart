@@ -1,0 +1,236 @@
+@model IEnumerable<UniMart_App.Models.Order>
+@{
+    ViewData["Title"] = "My Orders";
+    Layout = "_DashboardLayout";
+    decimal merchantFeePercentage = ViewBag.MerchantFeePercentage != null ? (decimal)ViewBag.MerchantFeePercentage : 0M;
+}
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0" data-translate="my_orders">My Orders</h2>
+            <p class="text-muted" data-translate="manage_orders_containing_your_products">Manage orders containing your products</p>
+        </div>
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="statusFilter" id="all" value="all" checked>
+            <label class="btn btn-outline-primary" for="all" data-translate="all_orders">All Orders</label>
+            
+            <input type="radio" class="btn-check" name="statusFilter" id="pending" value="Pending">
+            <label class="btn btn-outline-warning" for="pending" data-translate="pending">Pending</label>
+            
+            <input type="radio" class="btn-check" name="statusFilter" id="processing" value="Processing">
+            <label class="btn btn-outline-info" for="processing" data-translate="processing">Processing</label>
+            
+            <input type="radio" class="btn-check" name="statusFilter" id="shipped" value="Shipped">
+            <label class="btn btn-outline-success" for="shipped" data-translate="shipped">Shipped</label>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Orders List -->
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var order in Model)
+            {
+                <div class="col-12 mb-4">
+                    <div class="card shadow order-card" data-status="@order.Status">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col-md-3">
+                                    <h6 class="mb-0">Order #@order.Id</h6>
+                                    <small class="text-muted">@order.OrderDate.ToString("MMM dd, yyyy HH:mm")</small>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Customer:</strong><br>
+                                    <span class="text-muted">@order.User.FullName</span><br>
+                                    <small class="text-muted">@order.User.PhoneNumber</small>
+                                </div>
+                                <div class="col-md-2">
+                                    <strong>Total:</strong><br>
+                                    <span class="text-primary h6">@order.TotalAmount.ToString("N2") EGP</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <strong>Status:</strong><br>
+                                    @switch (order.Status)
+                                    {
+                                        case "Pending":
+                                            <span class="badge bg-warning">@order.Status</span>
+                                            break;
+                                        case "Processing":
+                                            <span class="badge bg-info">@order.Status</span>
+                                            break;
+                                        case "Shipped":
+                                            <span class="badge bg-success">@order.Status</span>
+                                            break;
+                                        case "Delivered":
+                                            <span class="badge bg-primary">@order.Status</span>
+                                            break;
+                                        case "Cancelled":
+                                            <span class="badge bg-danger">@order.Status</span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-secondary">@order.Status</span>
+                                            break;
+                                    }
+                                </div>
+                                <div class="col-md-2 text-end">
+                                    <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#order-@order.Id" aria-expanded="false">
+                                        <i class="bi bi-chevron-down"></i> Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="collapse" id="order-@order.Id">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 data-translate="order_items">Order Items:</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th data-translate="product">Product</th>
+                                                        <th data-translate="quantity">Quantity</th>
+                                                        <th data-translate="price">Price</th>
+                                                        <th data-translate="total">Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in order.OrderItems)
+                                                    {
+                                                        var prodWithImages = item.Product;
+                                                        <tr>
+                                                            <td>
+                                                                <div class="d-flex align-items-center">
+                                                                    <div>
+                                                                        <strong>@item.Product.Name</strong><br>
+                                                                        <small class="text-muted">@item.Product.Faculty?.Name</small>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>@item.Quantity</td>
+                                                            <td>@item.Price.ToString("N2") EGP</td>
+                                                            <td>@((item.Quantity * item.Price).ToString("N2")) EGP</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                        <hr>
+                                        <div class="mb-2">
+                                            <strong>Platform Fee:</strong><br>
+                                            @{
+                                                decimal platformFee = order.TotalAmount * merchantFeePercentage / 100M;
+                                                decimal netIncome = order.TotalAmount - platformFee;
+                                            }
+                                            <span class="text-danger">@platformFee.ToString("N2") EGP (@merchantFeePercentage%)</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>Net Income:</strong><br>
+                                            <span class="text-success">@netIncome.ToString("N2") EGP</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>Customer Contact:</strong><br>
+                                            <small class="text-muted">@order.User.PhoneNumber</small>
+                                        </div>
+                                        
+                                        @if (!string.IsNullOrEmpty(order.User.Address))
+                                        {
+                                            <div class="mb-2">
+                                                <strong>Shipping Address:</strong><br>
+                                                <small class="text-muted">
+                                                    @order.User.Address<br>
+                                                    @if (!string.IsNullOrEmpty(order.User.City))
+                                                    {
+                                                        @order.User.City
+                                                    }
+                                                    @if (!string.IsNullOrEmpty(order.User.PostalCode))
+                                                    {
+                                                        <text>, @order.User.PostalCode</text>
+                                                    }
+                                                </small>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-cart-x text-muted" style="font-size: 4rem;"></i>
+            <h4 class="mt-3 text-muted" data-translate="no_orders_yet">No Orders Yet</h4>
+            <p class="text-muted" data-translate="orders_containing_your_products_will_appear_here">Orders containing your products will appear here.</p>
+            <a asp-action="Products" class="btn btn-primary">
+                <i class="bi bi-box-seam"></i> Manage Your Products
+            </a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Status filter functionality
+            const statusFilters = document.querySelectorAll('input[name="statusFilter"]');
+            const orderCards = document.querySelectorAll('.order-card');
+            
+            statusFilters.forEach(filter => {
+                filter.addEventListener('change', function() {
+                    const selectedStatus = this.value;
+                    
+                    orderCards.forEach(card => {
+                        if (selectedStatus === 'all' || card.dataset.status === selectedStatus) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Auto-refresh every 30 seconds for new orders
+            setInterval(function() {
+                // You could implement auto-refresh here if needed
+                // location.reload();
+            }, 30000);
+        });
+    </script>
+}
+
+@section Styles {
+    <style>
+        .order-card {
+            transition: all 0.3s ease;
+        }
+        .order-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+        }
+        .btn-check:checked + .btn {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+            color: white;
+        }
+    </style>
+}
+

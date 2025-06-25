@@ -1,0 +1,83 @@
+@model UniMart_App.Models.AcademicYear
+@{
+    ViewData["Title"] = "Create Academic Year";
+    Layout = "_DashboardLayout";
+}
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0" data-translate="create_new_academic_year">Create New Academic Year</h2>
+            <p class="text-muted" data-translate="add_a_new_academic_year_for_student_classification">Add a new academic year for student classification</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Academic Years
+        </a>
+    </div>
+
+    <!-- Academic Year Form -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0" data-translate="academic_year_information">Academic Year Information</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="mb-4">
+                            <label asp-for="Year" class="form-label" data-translate="academic_year">Academic Year *</label>
+                            <input asp-for="Year" class="form-control" placeholder="e.g., First Year, Second Year, etc." />
+                            <span asp-validation-for="Year" class="text-danger"></span>
+                            <small class="form-text text-muted" data-translate="enter_the_academic_year_designation_eg_first_year_second_year_third_year_fourth_year">Enter the academic year designation (e.g., "First Year", "Second Year", "Third Year", "Fourth Year")</small>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-secondary" data-translate="cancel">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Create Academic Year
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0" data-translate="guidelines">Guidelines</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6><i class="bi bi-info-circle text-info"></i> Academic Year Format</h6>
+                        <p class="small text-muted" data-translate="use_clear_standard_academic_year_designations_that_students_will_recognize">Use clear, standard academic year designations that students will recognize.</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6><i class="bi bi-list-ol text-success"></i> Common Examples</h6>
+                        <ul class="small text-muted">
+                            <li data-translate="first_year">First Year</li>
+                            <li data-translate="second_year">Second Year</li>
+                            <li data-translate="third_year">Third Year</li>
+                            <li data-translate="fourth_year">Fourth Year</li>
+                            <li data-translate="graduate">Graduate</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-0">
+                        <h6><i class="bi bi-exclamation-triangle text-warning"></i> Important</h6>
+                        <p class="small text-muted" data-translate="each_academic_year_must_be_unique_duplicate_years_are_not_allowed">Each academic year must be unique. Duplicate years are not allowed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

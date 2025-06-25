@@ -1,0 +1,149 @@
+@model UniMart_App.ViewModels.LoginViewModel
+@{
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    ViewData["Title"] = "Login";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/Login.css" />
+    <link rel="stylesheet" href="~/css/transitions.css" />
+    <style>
+        body.dark-mode, .dark-mode .right-section {
+            background: #181a1b !important;
+            color: #f1f1f1 !important;
+        }
+        .dark-mode .form-control {
+            background: #23272b;
+            color: #f1f1f1;
+            border-color: #444;
+        }
+        .dark-mode .form-label, .dark-mode label, .dark-mode .text-muted, .dark-mode .fw-semibold {
+            color: #f1f1f1 !important;
+        }
+        .dark-mode .input-group-text, .dark-mode .form-check-label {
+            background: #23272b;
+            color: #f1f1f1;
+        }
+        .dark-mode .btn-primary {
+            background: #2d6cdf;
+            border-color: #2d6cdf;
+        }
+        .dark-mode .btn-outline-primary {
+            color: #f1f1f1;
+            border-color: #2d6cdf;
+        }
+        .dark-mode .btn-outline-primary:hover {
+            background: #2d6cdf;
+            color: #fff;
+        }
+        .dark-mode .btn-outline-danger {
+            color: #f1f1f1;
+            border-color: #dc3545;
+        }
+        .dark-mode .btn-outline-danger:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+        .dark-mode .tab-btn {
+            background: transparent;
+            color: #f1f1f1;
+        }
+        .dark-mode .tab-active {
+            background: #23272b;
+            color: #2d6cdf;
+        }
+        .dark-mode .divider {
+            border-top: 1px solid #444;
+        }
+        .dark-mode .bi-eye, .dark-mode .bi-eye-slash {
+            color: #f1f1f1 !important;
+        }
+        .dark-mode .right-section {
+            background: #181a1b !important;
+        }
+    </style>
+}
+
+<div class="container-fluid page-transition">
+    <div class="row">
+        <!-- Left Section -->
+        <div class="col-md-6 left-section">
+            <img src="~/img/img.png" class="logo-img" alt="UNIMART Logo" />
+        </div>
+
+        <!-- Right Section -->
+        <div class="col-md-6 d-flex align-items-center right-section">
+            <div class="w-100 px-5 py-5">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold mb-1">
+                        <span class="unimart-blue fw-bolder" data-translate="uni">UNI</span><span class="unimart-orange fw-normal" data-translate="mart">MART</span>
+                    </h2>
+                    <p class="text-muted" data-translate="your_campus_marketplace">Your Campus Marketplace</p>
+                    <div>
+                        <a asp-controller="Account" asp-action="Login" class="btn tab-btn tab-active" data-translate="login">Login</a>
+                        <a asp-controller="Account" asp-action="SignUp" class="btn tab-btn text-muted" data-translate="sign_up">Sign Up</a>
+                    </div>
+                </div>
+
+                <form asp-action="Login" method="post" id="loginForm">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control shadow-sm" placeholder="your@email.com" autocomplete="email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" asp-for="Password" data-translate="password">Password</label>
+                        <div class="input-group">
+                            <input asp-for="Password" id="password" type="password" class="form-control shadow-sm" placeholder="Enter your password" autocomplete="current-password" />
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3 small">
+                        <div class="form-check">
+                            <input asp-for="RememberMe" class="form-check-input" />
+                            <label class="form-check-label" asp-for="RememberMe"></label>
+                        </div>
+                        <a asp-controller="Account" asp-action="ForgotPassword" class="text-primary text-decoration-none" data-translate="forgot_password">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 fw-semibold py-2" data-translate="sign_in">Sign in</button>
+                </form>
+
+                <div class="text-center text-muted my-3">Or continue with</div>
+                <div class="divider mb-3"></div>
+
+                <div class="d-flex justify-content-center gap-2 mb-3">
+                    <button class="btn btn-outline-danger w-50 social-btn">
+                        <i class="bi bi-google"></i> Google
+                    </button>
+                    <button class="btn btn-outline-primary w-50 social-btn">
+                        <i class="bi bi-microsoft"></i> Outlook
+                    </button>
+                </div>
+
+                <div class="text-center mt-3">
+                    <small id="darkModeToggle" class="text-muted dark-toggle" style="cursor:pointer;">
+                        <i class="bi bi-moon"></i> <span class="toggle-label" data-translate="switch_to_dark_mode">Switch to Dark Mode</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Login.js"></script>
+    <script>
+        document.getElementById('darkModeToggle').addEventListener('click', function () {
+            document.body.classList.toggle('dark-mode');
+        });
+    </script>
+}

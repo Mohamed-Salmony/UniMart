@@ -1,0 +1,349 @@
+@using Microsoft.AspNetCore.Identity
+@using UniMart_App.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.Name" dir="@(System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft ? "rtl" : "ltr")">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - UniMart</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/dark-mode.css" />
+    <link rel="stylesheet" href="~/css/dashboard.css" />
+    <link rel="icon" type="image/png" href="/img/img.png" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse" style="height: 100vh; overflow-y: auto;">
+                <div class="position-sticky pt-3">
+                    <!-- Logo -->
+                    <div class="text-center mb-4">
+                        <img src="~/img/img.png" alt="UniMart Logo" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; display: block; margin: 0 auto 10px auto; box-shadow: 0 2px 8px rgba(0,0,0,0.15);" />
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="fw-bold text-white mt-2" style="font-size: 1.1rem;">Admin Panel</div>
+                        }
+                        else if (User.IsInRole("Merchant"))
+                        {
+                            <small class="text-muted" data-translate="merchant_dashboard">Merchant Dashboard</small>
+                        }
+                        else
+                        {
+                            <small class="text-muted" data-translate="dashboard">Dashboard</small>
+                        }
+                    </div>
+
+                    <!-- Navigation -->
+                    <ul class="nav flex-column">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")" 
+                                   asp-controller="Admin" asp-action="Index">
+                                    <i class="bi bi-speedometer2"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Users" ? "active" : "")" 
+                                   asp-controller="Admin" asp-action="Users">
+                                    <i class="bi bi-people"></i>
+                                    User Management
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Merchants" ? "active" : "")" 
+                                   asp-controller="Admin" asp-action="Merchants">
+                                    <i class="bi bi-shop"></i>
+                                    Merchant Management
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Products" && ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")" 
+                                   asp-controller="Admin" asp-action="Products">
+                                    <i class="bi bi-box-seam"></i>
+                                    Product Management
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Orders" && ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")" 
+                                   asp-controller="Admin" asp-action="Orders">
+                                    <i class="bi bi-cart-check"></i>
+                                    Order Management
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "FacultyManagement" ? "active" : "")" 
+                                   asp-controller="FacultyManagement" asp-action="Index">
+                                    <i class="bi bi-tags"></i>
+                                    Faculty Management
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AcademicYearManagement" ? "active" : "")" 
+                                   asp-controller="AcademicYearManagement" asp-action="Index">
+                                    <i class="bi bi-calendar3"></i>
+                                    Academic Years
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Analytics" && ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")" 
+                                   asp-controller="Admin" asp-action="Analytics">
+                                    <i class="bi bi-graph-up"></i>
+                                    Analytics
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Revenue" && ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")" 
+                                   asp-controller="Admin" asp-action="Revenue">
+                                    <i class="bi bi-cash-coin"></i>
+                                    Revenue Management
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "SupportTickets" ? "active" : "")" 
+                                   asp-controller="Admin" asp-action="SupportTickets">
+                                    <i class="bi bi-headset"></i>
+                                    Support Tickets
+                                </a>
+                            </li>
+                        }
+                        else if (User.IsInRole("Merchant"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")" 
+                                   asp-controller="Merchant" asp-action="Dashboard">
+                                    <i class="bi bi-speedometer2"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Products" && ViewContext.RouteData.Values["controller"]?.ToString() == "Merchant" ? "active" : "")" 
+                                   asp-controller="Merchant" asp-action="Products">
+                                    <i class="bi bi-box-seam"></i>
+                                    My Products
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "CreateProduct" ? "active" : "")" 
+                                   asp-controller="Merchant" asp-action="CreateProduct">
+                                    <i class="bi bi-plus-circle"></i>
+                                    Add Product
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Orders" && ViewContext.RouteData.Values["controller"]?.ToString() == "Merchant" ? "active" : "")" 
+                                   asp-controller="Merchant" asp-action="Orders">
+                                    <i class="bi bi-cart-check"></i>
+                                    My Orders
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Inventory" ? "active" : "")" 
+                                   asp-controller="Merchant" asp-action="Inventory">
+                                    <i class="bi bi-box2"></i>
+                                    My Inventory
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Revenue" ? "active" : "")" 
+                                   asp-controller="Merchant" asp-action="Revenue">
+                                    <i class="bi bi-cash-coin"></i>
+                                    My Revenue
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Analytics" && ViewContext.RouteData.Values["controller"]?.ToString() == "Merchant" ? "active" : "")" 
+                                   asp-controller="Merchant" asp-action="Analytics">
+                                    <i class="bi bi-graph-up"></i>
+                                    Analytics
+                                </a>
+                            </li>
+                        }
+
+                        <!-- Common Navigation -->
+                        <hr class="text-muted">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house"></i>
+                                Back to Store
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Products" asp-action="Index">
+                                <i class="bi bi-grid"></i>
+                                Browse Products
+                            </a>
+                        </li>
+                        @if (User.IsInRole("User") || User.IsInRole("Merchant"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Cart" asp-action="Index">
+                                    <i class="bi bi-cart"></i>
+                                    Shopping Cart
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- User Info -->
+                    <div class="mt-auto pt-3 border-top border-secondary">
+                        <div class="d-flex align-items-center mb-3">
+                            @if (!string.IsNullOrEmpty(UserManager.GetUserAsync(User).Result?.ProfileImageUrl))
+                            {
+                                <img src="@UserManager.GetUserAsync(User).Result.ProfileImageUrl" alt="Profile" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <div class="bg-primary rounded-circle me-2 d-flex align-items-center justify-content-center text-white" style="width: 32px; height: 32px; font-size: 14px;">
+                                    @(UserManager.GetUserAsync(User).Result?.FullName?.Substring(0, 1).ToUpper() ?? "U")
+                                </div>
+                            }
+                            <div class="flex-grow-1">
+                                <div class="text-white small">@UserManager.GetUserAsync(User).Result?.FullName</div>
+                                <div class="text-muted small">
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <span class="badge bg-danger" data-translate="admin">Admin</span>
+                                    }
+                                    else if (User.IsInRole("Merchant"))
+                                    {
+                                        <span class="badge bg-warning" data-translate="merchant">Merchant</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-info" data-translate="user">User</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="btn-group w-100" role="group">
+                            <a class="btn btn-outline-light btn-sm" asp-controller="Account" asp-action="Settings">
+                                <i class="bi bi-person"></i>
+                            </a>
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!-- Top Navigation Bar -->
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <!-- Hamburger menu for mobile -->
+                    <button class="btn btn-outline-secondary d-md-none me-2" type="button" data-bs-toggle="collapse" data-bs-target=".sidebar" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="bi bi-list" style="font-size: 1.5rem;"></i>
+                    </button>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="history.back()">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.reload()">
+                                <i class="bi bi-arrow-clockwise"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <!-- Notifications -->
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-outline-secondary position-relative" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-bell"></i>
+                                <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;">
+                                    0
+                                    <span class="visually-hidden" data-translate="unread_notifications">unread notifications</span>
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="notificationDropdown" style="min-width: 320px; max-width: 400px;">
+                                <li id="notificationList">
+                                    <div class="p-3 text-center text-muted">
+                                        <div class="spinner-border spinner-border-sm" role="status"></div>
+                                        <span class="ms-2" data-translate="loading">Loading...</span>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="text-center"><a href="@Url.Action("Notifications", "Account")" class="dropdown-item" data-translate="view_all_notifications">View all notifications</a></li>
+                            </ul>
+                        </div>
+                        <!-- End Notifications -->
+
+                        <!-- Dark mode toggle -->
+                        <button type="button" class="btn btn-outline-secondary dark-toggle" id="darkModeToggle" title="Toggle dark mode">
+                            <i class="bi bi-moon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/darkMode.js"></script>
+    <script>
+        $(document).ready(function () {
+            function loadNotifications() {
+                $.get('/NotificationApi/UserNotifications', function (data) {
+                    var $list = $('#notificationList');
+                    $list.empty();
+                    if (data && data.length > 0) {
+                        let unreadCount = data.filter(n => !n.isRead).length;
+                        if (unreadCount > 0) {
+                            $('#notificationCount').text(unreadCount).show();
+                        } else {
+                            $('#notificationCount').hide();
+                        }
+                        data.slice(0, 5).forEach(function (n) {
+                            $list.append(`
+                                <div class="d-flex align-items-start notification-item ${n.isRead ? '' : 'fw-bold'}" style="padding: 0.5rem 1rem;">
+                                    <a href="${n.actionUrl || '#'}" class="flex-grow-1 text-decoration-none text-dark notification-link" data-id="${n.id}">
+                                        <i class="bi bi-bell me-2 text-info"></i>
+                                        <span>${n.title}</span>
+                                        <div><small class="text-muted">${new Date(n.createdAt).toLocaleString()}</small></div>
+                                    </a>
+                                    <button class="btn btn-sm btn-link mark-as-read" data-id="${n.id}" title="Mark as read">
+                                        <i class="bi bi-check-circle${n.isRead ? '-fill text-success' : ''}"></i>
+                                    </button>
+                                </div>
+                            `);
+                        });
+                    } else {
+                        $('#notificationCount').hide();
+                        $list.append('<div class="p-3 text-center text-muted">No notifications</div>');
+                    }
+                });
+            }
+            $('#notificationDropdown').on('show.bs.dropdown', loadNotifications);
+            loadNotifications(); // <-- Add this line to load count on page load
+
+            // Mark as read handler
+            $(document).on('click', '.mark-as-read', function (e) {
+                e.preventDefault();
+                var notificationId = $(this).data('id');
+                $.post('/Notifications/MarkAsRead', { notificationId: notificationId }, function () {
+                    loadNotifications();
+                });
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
